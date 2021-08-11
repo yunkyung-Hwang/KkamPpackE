@@ -56,7 +56,7 @@ extension CalendarViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 //        let cell = collectionView.cellForItem(at: indexPath)
-        print("셀 선택")
+        print(indexPath)
         isMonth.toggle()
         collectionView.reloadData()
     }

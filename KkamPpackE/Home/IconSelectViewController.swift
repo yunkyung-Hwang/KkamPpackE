@@ -1,0 +1,50 @@
+//
+//  IconSelectViewController.swift
+//  KkamPpackE
+//
+//  Created by 황윤경 on 2021/08/11.
+//
+
+import UIKit
+
+class IconSelectViewController: UIViewController {
+    @IBOutlet weak var iconCollectionView: UICollectionView!
+    
+    override func viewDidLoad() {
+        super .viewDidLoad()
+        iconCollectionView.dataSource = self
+        iconCollectionView.delegate = self
+        
+        navigationController?.navigationBar.topItem?.title = "아이콘 선택"
+//        navigationItem.hidesBackButton = false
+//        navigationItem.backBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: nil)
+        navigationController?.navigationBar.backgroundColor = .clear
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: nil)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .cancel)
+    }
+}
+extension IconSelectViewController: UICollectionViewDataSource{
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 40
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = iconCollectionView.dequeueReusableCell(withReuseIdentifier: "iconCell", for: indexPath)
+        
+        return cell
+    }
+}
+
+extension IconSelectViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        4
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        17
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = 60
+        let size = CGSize(width: width, height: width)
+        return size
+    }
+}

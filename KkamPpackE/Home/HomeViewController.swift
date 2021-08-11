@@ -13,20 +13,23 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var homeCollectionView: UICollectionView!
     @IBOutlet weak var dailyCollectionView: UICollectionView!
     @IBOutlet weak var dailyTitle: UILabel!
+    @IBOutlet weak var dailyTitleBottomAnchor: NSLayoutConstraint!
+    @IBOutlet weak var dailyTitleTopAnchor: NSLayoutConstraint!
     
     var isEdit = false
     var isReorder = false
     var isRemove = false
     
-    public var homeList = [
+    public static var homeList = [
         HomeData("가스불", UIImage(named: "icon")!),
         HomeData("전등", UIImage(named: "icon")!),
         HomeData("마스크", UIImage(named: "icon")!),
         HomeData("지갑", UIImage(named: "icon")!),
         HomeData("창문", UIImage(named: "icon")!)
+//        HomeData("창문", UIImage(named: "icon")!)
     ]
     
-    public var dailyList = [
+    public static var dailyList = [
         DailyData("운동", UIImage(named: "icon")!, [0,6], 0, 0),
         DailyData("약먹기", UIImage(named: "icon")!, [], 0, 0),
         DailyData("분리수거", UIImage(named: "icon")!, [], 0, 0),
@@ -75,26 +78,39 @@ class HomeViewController: UIViewController {
         dailyCollectionView.isScrollEnabled = false
         
         setCollectionViewHeight()
+        
+    }
+    @IBAction func asdf(_ sender: Any) {
+        setCollectionViewHeight()
+        dailyCollectionView.reloadData()
+        homeCollectionView.reloadData()
     }
     
     func setCollectionViewHeight() {
-        var homeRowCnt = (homeList.count + 1) / 3
-        if (homeList.count + 1) % 3 != 0 {
+        var homeRowCnt = (HomeViewController.homeList.count + 1) / 3
+        if (HomeViewController.homeList.count + 1) % 3 != 0 {
             homeRowCnt += 1
         }
         
-        var dailyRowCnt = (dailyList.count + 1) / 3
-        if (dailyList.count + 1) % 3 != 0 {
+        var dailyRowCnt = (HomeViewController.dailyList.count + 1) / 3
+        if (HomeViewController.dailyList.count + 1) % 3 != 0 {
             dailyRowCnt += 1
         }
         
-        homeCollectionView.frame = CGRect(x: 27, y: 171, width: 360, height: homeRowCnt * 120)
-        
-        // 일회성 title위치 홈바둑판 y좌표 + 홈바둑판 행 개수 * 120 + 두개 간격
-        let dailyY = Int(homeCollectionView.frame.minY) + homeRowCnt * 120 + 39
-        dailyTitle.frame = CGRect(x: 27, y: dailyY, width: 63, height: 29)
+        homeCollectionView.frame = CGRect(x: 27, y: 61, width: 360, height: homeRowCnt * 120)
 
+        // 일회성 title위치 홈바둑판 y좌표 + 홈바둑판 행 개수 * 120 + 두개 간격
+        let dailyY = Int(homeCollectionView.frame.minY) + homeRowCnt * 120 + 40
+        dailyTitle.frame = CGRect(x: 27, y: dailyY, width: 63, height: 29)
+        
         dailyCollectionView.frame = CGRect(x: 27, y: dailyY + 14 + 29, width: 360, height: dailyRowCnt * 120)
+        
+        DispatchQueue.main.async {
+            self.dailyTitleTopAnchor.constant = CGFloat(homeRowCnt * 120 + 54)
+            self.dailyTitleBottomAnchor.constant = CGFloat(dailyRowCnt * 120 + 70)
+        }
+        dailyCollectionView.reloadData()
+        homeCollectionView.reloadData()
     }
     
     func setMenu() {
@@ -145,10 +161,10 @@ extension HomeViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         if collectionView == homeCollectionView {
-            return homeList.count + 1
+            return HomeViewController.homeList.count + 1
         }
         if collectionView == dailyCollectionView {
-            return dailyList.count + 1
+            return HomeViewController.dailyList.count + 1
         }
         return 0
     }
@@ -156,16 +172,16 @@ extension HomeViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = homeCollectionView.dequeueReusableCell(withReuseIdentifier: "homeCell", for: indexPath) as! HomeCell
         cell.layer.borderWidth = 1
-        cell.layer.borderColor = UIColor.lightGray.cgColor
+        cell.layer.borderColor = #colorLiteral(red: 0.8517223001, green: 0.846660018, blue: 0.8556143045, alpha: 1).cgColor
         
         let addCell = homeCollectionView.dequeueReusableCell(withReuseIdentifier: "addCell", for: indexPath)
         addCell.layer.borderWidth = 1
-        addCell.layer.borderColor = UIColor.lightGray.cgColor
+        addCell.layer.borderColor = #colorLiteral(red: 0.8517223001, green: 0.846660018, blue: 0.8556143045, alpha: 1).cgColor
         
         
         if collectionView == homeCollectionView {
-            if indexPath.row < homeList.count {
-                cell.taskName.text = homeList[indexPath.row].name
+            if indexPath.row < HomeViewController.homeList.count {
+                cell.taskName.text = HomeViewController.homeList[indexPath.row].name
                 if isEdit {
                     cell.taskEdit.image = UIImage(named: "edit")
                 } else if isReorder{
@@ -180,8 +196,8 @@ extension HomeViewController: UICollectionViewDataSource {
                 return addCell
             }
         } else if collectionView == dailyCollectionView {
-            if indexPath.row < dailyList.count {
-                cell.taskName.text = dailyList[indexPath.row].name
+            if indexPath.row < HomeViewController.dailyList.count {
+                cell.taskName.text = HomeViewController.dailyList[indexPath.row].name
                 if isEdit {
                     cell.taskEdit.image = UIImage(named: "edit")
                 } else if isReorder{
@@ -213,11 +229,11 @@ extension HomeViewController: UICollectionViewDataSource {
             alert.addAction(UIAlertAction(title: "확인", style: .destructive, handler: {
                 action in
                 if collectionView == self.homeCollectionView {
-                    self.homeList.remove(at: indexPath.row)
+                    HomeViewController.homeList.remove(at: indexPath.row)
                     print("removed")
                     collectionView.reloadData()
                 } else if collectionView == self.dailyCollectionView {
-                    self.dailyList.remove(at: indexPath.row)
+                    HomeViewController.dailyList.remove(at: indexPath.row)
                     collectionView.reloadData()
                 }
             }))
@@ -226,9 +242,9 @@ extension HomeViewController: UICollectionViewDataSource {
         else {
             var cnt = 0
             if collectionView == homeCollectionView {
-                cnt = homeList.count
+                cnt = HomeViewController.homeList.count
             } else if collectionView == dailyCollectionView {
-                cnt = dailyList.count
+                cnt = HomeViewController.dailyList.count
             }
             
             if indexPath.row == cnt{ //더보기 버튼
