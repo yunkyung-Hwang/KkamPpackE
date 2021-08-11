@@ -88,12 +88,13 @@ class HomeViewController: UIViewController {
             dailyRowCnt += 1
         }
         
-        homeCollectionView.frame = CGRect(x: 27, y: 149, width: 360, height: homeRowCnt * 120)
+        homeCollectionView.frame = CGRect(x: 27, y: 171, width: 360, height: homeRowCnt * 120)
         
-        let dailyY = Int(homeCollectionView.frame.minY) + homeRowCnt * 120 + 32
-        dailyTitle.frame = CGRect(x: 27, y: dailyY, width: 47, height: 22)
+        // 일회성 title위치 홈바둑판 y좌표 + 홈바둑판 행 개수 * 120 + 두개 간격
+        let dailyY = Int(homeCollectionView.frame.minY) + homeRowCnt * 120 + 39
+        dailyTitle.frame = CGRect(x: 27, y: dailyY, width: 63, height: 29)
 
-        dailyCollectionView.frame = CGRect(x: 27, y: dailyY + 33, width: 360, height: dailyRowCnt * 120)
+        dailyCollectionView.frame = CGRect(x: 27, y: dailyY + 14 + 29, width: 360, height: dailyRowCnt * 120)
     }
     
     func setMenu() {
