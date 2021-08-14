@@ -19,8 +19,12 @@ class IconSelectViewController: UIViewController {
 //        navigationItem.hidesBackButton = false
 //        navigationItem.backBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: nil)
         navigationController?.navigationBar.backgroundColor = .clear
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: nil)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .cancel)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(self.saveIcon))
+//        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.saveIcon))
+    }
+    @objc func saveIcon(){
+        print("저장됨")
+        self.dismiss(animated: true, completion: nil)
     }
 }
 extension IconSelectViewController: UICollectionViewDataSource{

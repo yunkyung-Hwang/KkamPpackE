@@ -47,6 +47,8 @@ class HomeViewController: UIViewController {
         super .viewWillAppear(true)
         self.navigationController?.isNavigationBarHidden = true
         tabBarController?.tabBar.isHidden = false
+        
+        setCollectionView()
     }
     override func viewDidLoad() {
         super .viewDidLoad()
@@ -76,17 +78,9 @@ class HomeViewController: UIViewController {
         dailyCollectionView.layer.cornerRadius = 15
         dailyCollectionView.isPagingEnabled = true
         dailyCollectionView.isScrollEnabled = false
-        
-        setCollectionViewHeight()
-        
-    }
-    @IBAction func asdf(_ sender: Any) {
-        setCollectionViewHeight()
-        dailyCollectionView.reloadData()
-        homeCollectionView.reloadData()
     }
     
-    func setCollectionViewHeight() {
+    func setCollectionView() {
         var homeRowCnt = (HomeViewController.homeList.count + 1) / 3
         if (HomeViewController.homeList.count + 1) % 3 != 0 {
             homeRowCnt += 1
@@ -236,6 +230,7 @@ extension HomeViewController: UICollectionViewDataSource {
                     HomeViewController.dailyList.remove(at: indexPath.row)
                     collectionView.reloadData()
                 }
+                self.setCollectionView()
             }))
             present(alert, animated: true, completion: nil)
         }

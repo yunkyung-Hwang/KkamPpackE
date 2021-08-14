@@ -19,6 +19,11 @@ class TaskViewController: UIViewController {
     let dayPicker = UIPickerView()
     let alarmPicker = UIPickerView()
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super .viewWillDisappear(true)
+
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super .viewWillAppear(true)
         tabBarController?.tabBar.isHidden = true
@@ -59,17 +64,13 @@ class TaskViewController: UIViewController {
         
         dismissPickerView()
     }
-    
-    @IBAction func selectIcon(_ sender: Any) {
-        
-    }
+
     
     @objc func saveTask(){
         print("저장됨")
         // 구조체 추가해서 서버에 전송
-        // 연달아 추가 or 바로 나가지기 => 기획팀한테 물어보기
-        // 나가면 생성되어있게
         HomeViewController.homeList.append(HomeData("창문", UIImage(named: "icon")!))
+        navigationController?.popViewController(animated: true)
     }
 
     @objc func onPickDone() {

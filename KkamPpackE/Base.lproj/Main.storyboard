@@ -24,22 +24,17 @@
                                 <state key="normal" image="chevron.backward" catalog="system">
                                     <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
                                 </state>
+                                <connections>
+                                    <action selector="prevMonthBtn:" destination="Szp-Jv-C0h" eventType="touchUpInside" id="aSc-Im-WTI"/>
+                                </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="2021년 07월" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9EC-t9-IEc">
-                                <rect key="frame" x="53" y="69" width="151" height="33"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="2021년 07월" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9EC-t9-IEc">
+                                <rect key="frame" x="53" y="69" width="160" height="33"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="27"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ihH-z3-c3f">
-                                <rect key="frame" x="212" y="70" width="30" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" image="chevron.right" catalog="system">
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
-                                </state>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yYx-J0-k4A">
                                 <rect key="frame" x="369" y="70" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -62,14 +57,76 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="dateCell" id="BUb-kI-Vbs">
-                                        <rect key="frame" x="0.0" y="0.0" width="53" height="130"/>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="dateCell" id="BUb-kI-Vbs" customClass="DateCell" customModule="KkamPpackE" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="53" height="105"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Bse-gZ-gUR">
-                                            <rect key="frame" x="0.0" y="0.0" width="53" height="130"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="53" height="105"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="30" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u3v-nC-GxR">
+                                                    <rect key="frame" x="4" y="4" width="20" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="+5" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fO6-2Z-SG1">
+                                                    <rect key="frame" x="29" y="9" width="19" height="11"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
                                         </collectionViewCellContentView>
-                                        <size key="customSize" width="53" height="130"/>
+                                        <size key="customSize" width="53" height="105"/>
+                                        <connections>
+                                            <outlet property="dateLabel" destination="u3v-nC-GxR" id="QKK-GQ-7Tv"/>
+                                            <outlet property="taskCnt" destination="fO6-2Z-SG1" id="dnf-8K-Cjn"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="dayCell" id="FNA-aC-20Y" customClass="DayCell" customModule="KkamPpackE" customModuleProvider="target">
+                                        <rect key="frame" x="63" y="41.5" width="53" height="22"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="GPP-xg-UtW">
+                                            <rect key="frame" x="0.0" y="0.0" width="53" height="22"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="day" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aM9-sh-cLn">
+                                                    <rect key="frame" x="15" y="2" width="25" height="18"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </collectionViewCellContentView>
+                                        <size key="customSize" width="53" height="22"/>
+                                        <connections>
+                                            <outlet property="dayLabel" destination="aM9-sh-cLn" id="cqF-I0-4OC"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="weekdateCell" id="MAA-SE-5lJ" customClass="WeekDateCell" customModule="KkamPpackE" customModuleProvider="target">
+                                        <rect key="frame" x="126" y="26" width="53" height="53"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="5gl-cS-nTm">
+                                            <rect key="frame" x="0.0" y="0.0" width="53" height="53"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="01" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L3d-XY-hbB">
+                                                    <rect key="frame" x="12" y="12" width="29" height="29"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </collectionViewCellContentView>
+                                        <size key="customSize" width="53" height="53"/>
+                                        <connections>
+                                            <outlet property="weekDateLabel" destination="L3d-XY-hbB" id="WWM-6m-r0i"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
@@ -80,6 +137,17 @@
                                     <segue destination="ReT-Y9-xJh" kind="embed" id="iGQ-cY-e1G"/>
                                 </connections>
                             </containerView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ihH-z3-c3f">
+                                <rect key="frame" x="221" y="70" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" image="chevron.right" catalog="system">
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
+                                </state>
+                                <connections>
+                                    <action selector="nextMonthBtn:" destination="Szp-Jv-C0h" eventType="touchUpInside" id="mxz-ut-meC"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Lh5-rS-0Jb"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -87,8 +155,10 @@
                     <navigationItem key="navigationItem" id="niw-wa-6x7"/>
                     <size key="freeformSize" width="414" height="1500"/>
                     <connections>
+                        <outlet property="addAndMonthBtn" destination="yYx-J0-k4A" id="Ln6-T5-YgG"/>
                         <outlet property="collectionView" destination="J9B-qR-r4a" id="3u6-ZZ-BTK"/>
                         <outlet property="weekView" destination="A6o-yp-7WV" id="YTT-kv-fRv"/>
+                        <outlet property="yearMonthLabel" destination="9EC-t9-IEc" id="MEO-Qk-cVQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X5C-7i-9CA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -588,7 +658,7 @@
         <!--Home View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="HomeViewController" customModule="KkamPpackE" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="homeView" id="BYZ-38-t0r" customClass="HomeViewController" customModule="KkamPpackE" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -723,14 +793,6 @@
                                                     <outlet property="delegate" destination="BYZ-38-t0r" id="Llz-uA-FmM"/>
                                                 </connections>
                                             </collectionView>
-                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Aem-fr-osD">
-                                                <rect key="frame" x="150" y="18" width="46" height="30"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Button"/>
-                                                <connections>
-                                                    <action selector="asdf:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3aL-Fb-GAy"/>
-                                                </connections>
-                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
@@ -917,7 +979,6 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
-                                    <action selector="selectIcon:" destination="OQh-R4-Hpc" eventType="touchUpInside" id="FTb-sq-xVw"/>
                                     <segue destination="P6B-wG-X5e" kind="presentation" id="0DG-Bh-gKt"/>
                                 </connections>
                             </button>
@@ -1202,7 +1263,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bzt-EB-ffO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-271.01449275362319" y="770.75892857142856"/>
+            <point key="canvasLocation" x="-286" y="771"/>
         </scene>
     </scenes>
     <resources>
