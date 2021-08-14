@@ -67,9 +67,14 @@ class TaskViewController: UIViewController {
 
     
     @objc func saveTask(){
-        print("저장됨")
         // 구조체 추가해서 서버에 전송
-        HomeViewController.homeList.append(HomeData("창문", UIImage(named: "icon")!))
+        
+        if HomeViewController.isEdit {
+            print("태스크 수정됨")
+        } else {
+            HomeViewController.homeList.append(HomeData("창문", UIImage(named: "icon")!))
+            print("저장됨")
+        }
         navigationController?.popViewController(animated: true)
     }
 

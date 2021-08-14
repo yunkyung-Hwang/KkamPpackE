@@ -16,7 +16,7 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var dailyTitleBottomAnchor: NSLayoutConstraint!
     @IBOutlet weak var dailyTitleTopAnchor: NSLayoutConstraint!
     
-    var isEdit = false
+    static var isEdit = false
     var isReorder = false
     var isRemove = false
     
@@ -125,11 +125,17 @@ class HomeViewController: UIViewController {
     
     func list(edit:String) {
         if edit == "edit" {
-            isEdit = true
+            HomeViewController.isEdit = true
+            titleDate.text = "할 일 편집"
+            titleDate.font = UIFont.boldSystemFont(ofSize: 25)
         } else if edit == "order" {
             isReorder = true
+            titleDate.text = "순서 변경"
+            titleDate.font = UIFont.boldSystemFont(ofSize: 25)
         } else if edit == "remove" {
             isRemove = true
+            titleDate.text = "삭제"
+            titleDate.font = UIFont.boldSystemFont(ofSize: 25)
         }
         listEdtiBtn.setImage(UIImage(systemName: "checkmark"), for: .normal)
         listEdtiBtn.menu = nil
@@ -139,7 +145,13 @@ class HomeViewController: UIViewController {
 
     @IBAction func saveList(_ sender: Any) {
         print("save")
-        isEdit = false
+        let date = DateFormatter()
+        date.dateFormat = "MM.dd.EEEE"
+        date.locale = Locale(identifier: "ko-KR")
+        titleDate.text = date.string(from: Date())
+        titleDate.font = UIFont.boldSystemFont(ofSize: 29)
+        
+        HomeViewController.isEdit = false
         isReorder = false
         isRemove = false
         homeCollectionView.reloadData()
@@ -176,7 +188,7 @@ extension HomeViewController: UICollectionViewDataSource {
         if collectionView == homeCollectionView {
             if indexPath.row < HomeViewController.homeList.count {
                 cell.taskName.text = HomeViewController.homeList[indexPath.row].name
-                if isEdit {
+                if HomeViewController.isEdit {
                     cell.taskEdit.image = UIImage(named: "edit")
                 } else if isReorder{
                     cell.taskEdit.image = UIImage(named: "move")
@@ -192,7 +204,7 @@ extension HomeViewController: UICollectionViewDataSource {
         } else if collectionView == dailyCollectionView {
             if indexPath.row < HomeViewController.dailyList.count {
                 cell.taskName.text = HomeViewController.dailyList[indexPath.row].name
-                if isEdit {
+                if HomeViewController.isEdit {
                     cell.taskEdit.image = UIImage(named: "edit")
                 } else if isReorder{
                     cell.taskEdit.image = UIImage(named: "move")
@@ -210,53 +222,84 @@ extension HomeViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if isEdit {
-            print("태스크 변경")
-        }
-        else if isReorder {
-            print("순서 변경")
-        }
-        else if isRemove {
-            print("목록 삭제")
-            let alert = UIAlertController(title: "경고", message: "정말 삭제하시겠습니까?", preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
-            alert.addAction(UIAlertAction(title: "확인", style: .destructive, handler: {
-                action in
-                if collectionView == self.homeCollectionView {
-                    HomeViewController.homeList.remove(at: indexPath.row)
-                    print("removed")
-                    collectionView.reloadData()
-                } else if collectionView == self.dailyCollectionView {
-                    HomeViewController.dailyList.remove(at: indexPath.row)
-                    collectionView.reloadData()
-                }
-                self.setCollectionView()
-            }))
-            present(alert, animated: true, completion: nil)
-        }
-        else {
-            var cnt = 0
-            if collectionView == homeCollectionView {
-                cnt = HomeViewController.homeList.count
-            } else if collectionView == dailyCollectionView {
-                cnt = HomeViewController.dailyList.count
-            }
+        let cell = collectionView.cellForItem(at: indexPath)
+        
+        if cell?.reuseIdentifier == "addCell" {
+            HomeViewController.isEdit = false
+            isReorder = false
+            isRemove = false
             
-            if indexPath.row == cnt{ //더보기 버튼
-                print("더보기 Btn")
-            } else {    // 나머지
-                let cell = collectionView.cellForItem(at: indexPath) as! HomeCell
-                print(cell.taskName.text!)
+            guard let uvc = self.storyboard?.instantiateViewController(identifier: "addTaskView") else{
+                return
+            }
+            self.navigationController?.pushViewController(uvc, animated: true)
+        } else {
+            if HomeViewController.isEdit {
+                print("태스크 변경")
+                guard let uvc = self.storyboard?.instantiateViewController(identifier: "addTaskView") else{
+                    return
+                }
+                self.navigationController?.pushViewController(uvc, animated: true)
+            }
+            else if isReorder {
+                print("순서 변경")
+            }
+            else if isRemove {
+                print("목록 삭제")
+
+                let actionSheetController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
                 
-                if cell.tappedCnt == 0 {
-                    cell.tappedCnt += 1
-                    cell.backgroundColor = #colorLiteral(red: 0.9528681636, green: 0.9529822469, blue: 0.9528294206, alpha: 1)
+                var title = ""
+                if collectionView == homeCollectionView {
+                    title = "'" + HomeViewController.homeList[indexPath.row].name + "' 삭제"
                 } else {
-                    cell.backgroundColor = .white
-                    cell.tappedCnt -= 1
+                    title = "'" + HomeViewController.dailyList[indexPath.row].name + "' 삭제"
+                }
+                let removeTask = UIAlertAction(title: title, style: .destructive) { action -> Void in
+                    if collectionView == self.homeCollectionView {
+                        HomeViewController.homeList.remove(at: indexPath.row)
+                        print("removed")
+                        collectionView.reloadData()
+                    } else if collectionView == self.dailyCollectionView {
+                        HomeViewController.dailyList.remove(at: indexPath.row)
+                        collectionView.reloadData()
+                    }
+                    self.setCollectionView()
+                }
+
+                let cancelAction = UIAlertAction(title: "취소", style: .cancel) { action -> Void in }
+
+                // add actions
+                actionSheetController.addAction(removeTask)
+                actionSheetController.addAction(cancelAction)
+
+                self.present(actionSheetController, animated: true, completion: nil)
+            }
+            else {
+                var cnt = 0
+                if collectionView == homeCollectionView {
+                    cnt = HomeViewController.homeList.count
+                } else if collectionView == dailyCollectionView {
+                    cnt = HomeViewController.dailyList.count
+                }
+                
+                if indexPath.row == cnt{ //더보기 버튼
+                    print("더보기 Btn")
+                } else {    // 나머지
+                    let cell = collectionView.cellForItem(at: indexPath) as! HomeCell
+                    print(cell.taskName.text!)
+                    
+                    if cell.tappedCnt == 0 {
+                        cell.tappedCnt += 1
+                        cell.backgroundColor = #colorLiteral(red: 0.9528681636, green: 0.9529822469, blue: 0.9528294206, alpha: 1)
+                    } else {
+                        cell.backgroundColor = .white
+                        cell.tappedCnt -= 1
+                    }
                 }
             }
         }
+        
     }
 }
 

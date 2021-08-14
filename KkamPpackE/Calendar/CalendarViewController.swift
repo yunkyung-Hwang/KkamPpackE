@@ -84,7 +84,7 @@ class CalendarViewController: UIViewController {
         firstDayOfMonth = cal.date(from: components)
         
         weekdayAdding = 2 - firstWeekday
-//        print("weekdayAdding",weekdayAdding)
+        
         self.yearMonthLabel.text = dateFormatter.string(from: firstDayOfMonth!)
         self.days.removeAll()
         for day in weekdayAdding...42 {
@@ -96,8 +96,6 @@ class CalendarViewController: UIViewController {
                 self.days.append(["다음달",String(day - day_Max)])
             }
         }
-//        print("days[0]",days[0])
-//        print(days)
     }
     @IBAction func nextMonthBtn(_ sender: Any) {
         components.month = components.month! + 1
@@ -108,6 +106,18 @@ class CalendarViewController: UIViewController {
         components.month = components.month! - 1
         self.calculation()
         self.collectionView.reloadData()
+    }
+    @IBAction func addAndMonthBtn(_ sender: Any) {
+        if isMonth {    // 월간 화면일때 눌리면
+            guard let uvc = self.storyboard?.instantiateViewController(identifier: "addPlanView") else{
+                return
+            }
+            self.navigationController?.pushViewController(uvc, animated: true)
+        } else {        // 주간 화면일때 눌리면
+            addAndMonthBtn.setImage(UIImage(systemName: "plus"), for: .normal)
+            isMonth.toggle()
+            collectionView.reloadData()
+        }
     }
 }
 
@@ -133,7 +143,11 @@ extension CalendarViewController: UICollectionViewDataSource {
                 cell.layer.borderWidth = 1
                 cell.layer.borderColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1).cgColor
                 
-                cell.dateLabel.text = days[indexPath.row - 7][1]
+                if days[indexPath.row - 7][1].count == 1 {
+                    cell.dateLabel.text = "0"+days[indexPath.row - 7][1]
+                } else {
+                    cell.dateLabel.text = days[indexPath.row - 7][1]
+                }
                 
                 //
                 if indexPath.row - 7 < cal.component(.weekday, from: cal.date(from: components)!) - 1 {
@@ -166,7 +180,11 @@ extension CalendarViewController: UICollectionViewDataSource {
                 // 선택된 셀의 날짜값이 존재하면 (""포함) 그거로 넣고 없으면 자동 ""
                 // 선택된 셀의
                 if indexPath.row - 7 == selectedIndexPath {
-                    cell.weekDateLabel.text = "\(selectedDate)"
+                    if selectedDate < 10 {
+                        cell.weekDateLabel.text = "0\(selectedDate)"
+                    } else {
+                        cell.weekDateLabel.text = "\(selectedDate)"
+                    }
                     cell.weekDateLabel.textColor = .black
 //                    cell.backgroundColor = .lightGray
                 } else {
@@ -185,15 +203,28 @@ extension CalendarViewController: UICollectionViewDataSource {
                     // MARK: 수정 필요
                     // 이전달의 요일을 누른건지 이번 달의 요일을 누른건지 구분하기
                     if day <= 0 {
-                        cell.weekDateLabel.text = "\(prevDayMax + day)"
+                        if prevDayMax + day < 10 {
+                            cell.weekDateLabel.text = "0\(prevDayMax + day)"
+                        } else {
+                            cell.weekDateLabel.text = "\(prevDayMax + day)"
+                        }
                         cell.weekDateLabel.textColor = #colorLiteral(red: 0.768627451, green: 0.768627451, blue: 0.768627451, alpha: 1)
 //                        print("aaa ")
                     } else if day > day_Max{
-                        cell.weekDateLabel.text = "\(day - day_Max)"
+                        if day - day_Max < 10 {
+                            cell.weekDateLabel.text = "0\(day - day_Max)"
+                        } else {
+                            cell.weekDateLabel.text = "\(day - day_Max)"
+                        }
+//                        cell.weekDateLabel.text = "\(day - day_Max)"
                         cell.weekDateLabel.textColor = #colorLiteral(red: 0.768627451, green: 0.768627451, blue: 0.768627451, alpha: 1)
 //                        print("bbb ", cell.weekDateLabel.text!)
                     } else {
-                        cell.weekDateLabel.text = "\(day)"
+                        if day < 10 {
+                            cell.weekDateLabel.text = "0\(day)"
+                        } else {
+                            cell.weekDateLabel.text = "\(day)"
+                        }
                         cell.weekDateLabel.textColor = .black
                     }
                     
@@ -209,6 +240,8 @@ extension CalendarViewController: UICollectionViewDataSource {
             return
         }
         if isMonth {
+            addAndMonthBtn.setImage(UIImage(systemName: "calendar"), for: .normal)
+            
             let cell = collectionView.cellForItem(at: indexPath) as! DateCell
             selectedDate = Int(cell.dateLabel.text!)!
             
