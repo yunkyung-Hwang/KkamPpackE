@@ -49,6 +49,9 @@ extension WeekViewController: UICollectionViewDataSource {
                 cell.layer.borderWidth = 1
                 cell.layer.borderColor = UIColor.lightGray.cgColor
                 cell.layer.cornerRadius = 15
+                
+                cell.memoEditBtn.menu = cell.menu
+                cell.memoEditBtn.showsMenuAsPrimaryAction = true
                 return cell
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "addCell", for: indexPath)

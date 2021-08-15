@@ -13,6 +13,7 @@
 		2314981C26BED550000CCD9A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2314981A26BED550000CCD9A /* Main.storyboard */; };
 		2314981E26BED551000CCD9A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2314981D26BED551000CCD9A /* Assets.xcassets */; };
 		2314982126BED551000CCD9A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2314981F26BED551000CCD9A /* LaunchScreen.storyboard */; };
+		231790CD26C8C51000162401 /* WeekDayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231790CC26C8C51000162401 /* WeekDayCell.swift */; };
 		23317A5E26C11B0C00730452 /* WeekViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23317A5D26C11B0C00730452 /* WeekViewController.swift */; };
 		233C54C726BFF83500E8A045 /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233C54C626BFF83500E8A045 /* CalendarViewController.swift */; };
 		233C54CA26C0009000E8A045 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233C54C926C0009000E8A045 /* StartViewController.swift */; };
@@ -44,6 +45,7 @@
 		2314981D26BED551000CCD9A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2314982026BED551000CCD9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2314982226BED551000CCD9A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		231790CC26C8C51000162401 /* WeekDayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDayCell.swift; sourceTree = "<group>"; };
 		23317A5D26C11B0C00730452 /* WeekViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekViewController.swift; sourceTree = "<group>"; };
 		233C54C626BFF83500E8A045 /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
 		233C54C926C0009000E8A045 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 				234AF01C26BF875B00CB1BDC /* HomeCell.swift */,
 				2386E27126BFDCFD008BC45D /* TaskViewController.swift */,
 				23BC52B726C3EC5100EC6A96 /* IconSelectViewController.swift */,
+				231790CC26C8C51000162401 /* WeekDayCell.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -298,6 +301,7 @@
 				2314981926BED550000CCD9A /* ViewController.swift in Sources */,
 				23BC52BB26C3FA8700EC6A96 /* AddPlan.swift in Sources */,
 				23BC52B826C3EC5100EC6A96 /* IconSelectViewController.swift in Sources */,
+				231790CD26C8C51000162401 /* WeekDayCell.swift in Sources */,
 				235E637C26C0FF0E0019672D /* IconCell.swift in Sources */,
 				23849E7E26C02DC6008CC09F /* DailyData.swift in Sources */,
 				23849E8126C03D94008CC09F /* AlarmCell.swift in Sources */,

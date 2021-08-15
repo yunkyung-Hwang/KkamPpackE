@@ -16,7 +16,7 @@ struct DailyData {
     
     // 이름, 아이콘, 요일, 하루 몇번, 알람 몇번, 선택 상태
     
-    init(_ name:String, _ icon:UIImage, _ day:Array<Int>, _ dayCnt:Int, _ alarmCnt:Int) {
+    init(_ name:String, _ icon:UIImage, _ day:Array<Int>, _ dayCnt:Int, _ alarmCnt:String) {
         self.name = name
         self.icon = icon
         
@@ -25,6 +25,10 @@ struct DailyData {
         }
         
         self.dayCnt = dayCnt
-        self.alarmCnt = alarmCnt
+        if alarmCnt == "없음" {
+            self.alarmCnt = 0
+        } else {
+            self.alarmCnt = Int(alarmCnt)
+        }
     }
 }

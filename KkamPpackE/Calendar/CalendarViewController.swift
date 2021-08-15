@@ -186,7 +186,7 @@ extension CalendarViewController: UICollectionViewDataSource {
                         cell.weekDateLabel.text = "\(selectedDate)"
                     }
                     cell.weekDateLabel.textColor = .black
-//                    cell.backgroundColor = .lightGray
+                    cell.backgroundColor = .lightGray
                 } else {
 //                    components.month = components.month! - 1
 //                    var firstDayOfMonth = cal.date(from: components)
@@ -228,7 +228,7 @@ extension CalendarViewController: UICollectionViewDataSource {
                         cell.weekDateLabel.textColor = .black
                     }
                     
-//                    cell.backgroundColor = .white
+                    cell.backgroundColor = .white
                 }
                 return cell
             }
