@@ -21,13 +21,13 @@ class CalendarViewController: UIViewController {
     let dateFormatter = DateFormatter()
     var components = DateComponents()
     let daylist = ["일","월","화","수","목","금","토"]
-    var days: [[String]] = []
+    var days: [[Int]] = []
     var day_Max = 0 // 해당 월이 며칠까지 있는지
     var prevDayMax = 0
     var weekdayAdding = 0 // 시작일
     let today = DateFormatter()
     
-    var selectedDate = 0
+    var selectedDate = [0,0]    // [월, 일]
     var selectedIndexPath = 0
     
     
@@ -61,41 +61,40 @@ class CalendarViewController: UIViewController {
         components.month = cal.component(.month, from: now)
         components.day = 1
         self.calculation()
+        
+//        print("now: ",now, "\ncal:", cal, "\ndateFormatter:", dateFormatter, "\ncomponents: ", components)
     }
     
     private func calculation() { // 월 별 일 수 계산
         
         var firstDayOfMonth = cal.date(from: components)
-        let firstWeekday = cal.component(.weekday, from: firstDayOfMonth!) // 해당 수로 반환이 됩니다. 1은 일요일 ~ 7은 토요일
-//        components.month = components.month! - 1
-//        firstDayOfMonth = cal.date(from: components)
-//        let lastDayOfPrevMonth = cal.range(of: .day, in: .month, for: firstDayOfMonth!)!.count
-//
-//        components.month = components.month! + 1
-//        firstDayOfMonth = cal.date(from: components)
+        let firstWeekday = cal.component(.weekday, from: firstDayOfMonth!) // 해당 수로 반환. 1: 일요일 ~ 7: 토요일
         
-        day_Max = cal.range(of: .day, in: .month, for: firstDayOfMonth!)!.count
+        day_Max = cal.range(of: .day, in: .month, for: firstDayOfMonth!)!.count // 8월: 1..<32
         
+        // 이전달 설정
         components.month = components.month! - 1
         firstDayOfMonth = cal.date(from: components)
         prevDayMax = cal.range(of: .day, in: .month, for: firstDayOfMonth!)!.count
-        
+        // 다시 이번달 기준
         components.month = components.month! + 1
         firstDayOfMonth = cal.date(from: components)
         
+        // 요일
         weekdayAdding = 2 - firstWeekday
         
         self.yearMonthLabel.text = dateFormatter.string(from: firstDayOfMonth!)
         self.days.removeAll()
         for day in weekdayAdding...42 {
             if day < 1 { // 1보다 작을 경우는 비워줘야 하기 때문에 빈 값을 넣어준다.
-                self.days.append(["이전달",String(day + prevDayMax)])
+                self.days.append([components.month! - 1, day + prevDayMax])
             } else if day <= day_Max {
-                self.days.append(["이번달",String(day)])
+                self.days.append([components.month!, day])
             } else {
-                self.days.append(["다음달",String(day - day_Max)])
+                self.days.append([components.month! + 1, day - day_Max])
             }
         }
+//        print(days)
     }
     @IBAction func nextMonthBtn(_ sender: Any) {
         components.month = components.month! + 1
@@ -131,6 +130,7 @@ extension CalendarViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        calculation()
         if indexPath.row < 7 {  // 주 이름
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "dayCell", for: indexPath) as! DayCell
             cell.dayLabel.text = daylist[indexPath.row]
@@ -143,93 +143,121 @@ extension CalendarViewController: UICollectionViewDataSource {
                 cell.layer.borderWidth = 1
                 cell.layer.borderColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1).cgColor
                 
-                if days[indexPath.row - 7][1].count == 1 {
-                    cell.dateLabel.text = "0"+days[indexPath.row - 7][1]
+                // 1 to 01
+                if days[indexPath.row - 7][1]/10 == 0 {
+                    cell.dateLabel.text = "0"+String(days[indexPath.row - 7][1])
                 } else {
-                    cell.dateLabel.text = days[indexPath.row - 7][1]
+                    cell.dateLabel.text = String(days[indexPath.row - 7][1])
                 }
                 
-                //
+                // 이전달 남은 일자
                 if indexPath.row - 7 < cal.component(.weekday, from: cal.date(from: components)!) - 1 {
                     cell.dateLabel.textColor = #colorLiteral(red: 0.768627451, green: 0.768627451, blue: 0.768627451, alpha: 1)
-                } else if indexPath.row - 7 < day_Max + cal.component(.weekday, from: cal.date(from: components)!) - 1 {
+                    
+                    cell.taskCnt.backgroundColor = .white
+                    cell.taskCnt.textColor = .white
+                }
+                // 이번달 일자
+                else if indexPath.row - 7 < day_Max + cal.component(.weekday, from: cal.date(from: components)!) - 1 {
                     cell.dateLabel.textColor = .black
                     // 오늘 날짜인 경우 색칠
-                    if components.month == cal.component(.month, from: now) && days[indexPath.row - 7][1] == today.string(from: Date()) {
+                    if components.month == cal.component(.month, from: now) && String(days[indexPath.row - 7][1]) == today.string(from: Date()) {
                         cell.dateLabel.clipsToBounds = true
                         cell.dateLabel.backgroundColor = .lightGray
                         cell.dateLabel.layer.cornerRadius = cell.dateLabel.frame.height/2
                     } else {
                         cell.dateLabel.backgroundColor = .white
                     }
-                } else {
-                    cell.dateLabel.textColor = #colorLiteral(red: 0.768627451, green: 0.768627451, blue: 0.768627451, alpha: 1)
-                    cell.dateLabel.backgroundColor = .white
+                    
+                    // 태스크 개수 표시
+//                    cell.taskCnt.clipsToBounds = true
+//                    cell.taskCnt.layer.cornerRadius = cell.taskCnt.frame.height / 2
+//                    cell.taskCnt.backgroundColor = #colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1)
+                    cell.taskCnt.textColor = .white
                 }
-                
-                cell.taskCnt.clipsToBounds = true
-                cell.taskCnt.layer.cornerRadius = cell.taskCnt.frame.height / 2
-//                cell.taskCnt.backgroundColor = #colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1)
-                cell.taskCnt.textColor = .white
+                // 다음달 남은 일자
+                else {
+                    cell.dateLabel.textColor = #colorLiteral(red: 0.768627451, green: 0.768627451, blue: 0.768627451, alpha: 1)
+                    
+                    cell.taskCnt.backgroundColor = .white
+                    cell.taskCnt.textColor = .white
+                }
                 
                 return cell
             } else {    // 주간
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "weekdateCell", for: indexPath) as! WeekDateCell
                 cell.layer.borderWidth = 1
                 cell.layer.borderColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1).cgColor
+                
+//                cell.weekDateLabel.text = "\(days[selectedIndexPath][1])"
+                
+                if days[selectedIndexPath][0] < components.month! { // 이전달이면
+                    components.month = days[selectedIndexPath][0]
+                    print(components.month!)
+                } else if days[selectedIndexPath][0] > components.month! {  // 다음달이면
+                    components.month = days[selectedIndexPath][0]
+                    print(components.month!)
+                } else {    // 이번달이면
+                    print(components.month!)
+                }
+                
+//                if selectedIndexPath / 7 == 0 {
+//                    cell.weekDateLabel.text = "\(days[selectedIndexPath][1] + indexPath.row)"
+//                }
+                
                 // 선택된 셀의 날짜값이 존재하면 (""포함) 그거로 넣고 없으면 자동 ""
                 // 선택된 셀의
-                if indexPath.row - 7 == selectedIndexPath {
-                    if selectedDate < 10 {
-                        cell.weekDateLabel.text = "0\(selectedDate)"
-                    } else {
-                        cell.weekDateLabel.text = "\(selectedDate)"
-                    }
-                    cell.weekDateLabel.textColor = .black
-                    cell.backgroundColor = .lightGray
-                } else {
-//                    components.month = components.month! - 1
-//                    var firstDayOfMonth = cal.date(from: components)
-//                    let lastDayOfPrevMonth = cal.range(of: .day, in: .month, for: firstDayOfMonth!)!.count
+//                if indexPath.row - 7 == selectedIndexPath {
+//                    if selectedDate[1] < 10 {
+//                        cell.weekDateLabel.text = "0\(selectedDate[1])"
+//                    } else {
+//                        cell.weekDateLabel.text = "\(selectedDate[1])"
+//                    }
+//                    cell.weekDateLabel.textColor = .black
+//                    cell.backgroundColor = .lightGray
+//                } else {
+////                    components.month = components.month! - 1
+////                    var firstDayOfMonth = cal.date(from: components)
+////                    let lastDayOfPrevMonth = cal.range(of: .day, in: .month, for: firstDayOfMonth!)!.count
+////
+////                    components.month = components.month! + 1
+////                    firstDayOfMonth = cal.date(from: components)
 //
-//                    components.month = components.month! + 1
-//                    firstDayOfMonth = cal.date(from: components)
-                    
-                    let day = selectedDate - selectedIndexPath + indexPath.row - 7
-//                    print(day, day_Max)
-//                    print("day", day)
-//                    print(lastDayOfPrevMonth)
-//                    print(prevDayMax)
-                    // MARK: 수정 필요
-                    // 이전달의 요일을 누른건지 이번 달의 요일을 누른건지 구분하기
-                    if day <= 0 {
-                        if prevDayMax + day < 10 {
-                            cell.weekDateLabel.text = "0\(prevDayMax + day)"
-                        } else {
-                            cell.weekDateLabel.text = "\(prevDayMax + day)"
-                        }
-                        cell.weekDateLabel.textColor = #colorLiteral(red: 0.768627451, green: 0.768627451, blue: 0.768627451, alpha: 1)
-//                        print("aaa ")
-                    } else if day > day_Max{
-                        if day - day_Max < 10 {
-                            cell.weekDateLabel.text = "0\(day - day_Max)"
-                        } else {
-                            cell.weekDateLabel.text = "\(day - day_Max)"
-                        }
-//                        cell.weekDateLabel.text = "\(day - day_Max)"
-                        cell.weekDateLabel.textColor = #colorLiteral(red: 0.768627451, green: 0.768627451, blue: 0.768627451, alpha: 1)
-//                        print("bbb ", cell.weekDateLabel.text!)
-                    } else {
-                        if day < 10 {
-                            cell.weekDateLabel.text = "0\(day)"
-                        } else {
-                            cell.weekDateLabel.text = "\(day)"
-                        }
-                        cell.weekDateLabel.textColor = .black
-                    }
-                    
-                    cell.backgroundColor = .white
-                }
+//                    let day = selectedDate[1] - selectedIndexPath + indexPath.row - 7
+////                    print(day, day_Max)
+////                    print("day", day)
+////                    print(lastDayOfPrevMonth)
+////                    print(prevDayMax)
+//                    // MARK: 수정 필요
+//                    // 이전달의 요일을 누른건지 이번 달의 요일을 누른건지 구분하기
+//                    if day <= 0 {
+//                        if prevDayMax + day < 10 {
+//                            print(prevDayMax+day,day)
+//                            cell.weekDateLabel.text = "0\(prevDayMax + day)"
+//                        } else {
+//                            cell.weekDateLabel.text = "\(prevDayMax + day)"
+//                        }
+//                        cell.weekDateLabel.textColor = #colorLiteral(red: 0.768627451, green: 0.768627451, blue: 0.768627451, alpha: 1)
+////                        print("aaa ")
+//                    } else if day > day_Max{
+//                        if day - day_Max < 10 {
+//                            cell.weekDateLabel.text = "0\(day - day_Max)"
+//                        } else {
+//                            cell.weekDateLabel.text = "\(day - day_Max)"
+//                        }
+////                        cell.weekDateLabel.text = "\(day - day_Max)"
+//                        cell.weekDateLabel.textColor = #colorLiteral(red: 0.768627451, green: 0.768627451, blue: 0.768627451, alpha: 1)
+////                        print("bbb ", cell.weekDateLabel.text!)
+//                    } else {
+//                        if day < 10 {
+//                            cell.weekDateLabel.text = "0\(day)"
+//                        } else {
+//                            cell.weekDateLabel.text = "\(day)"
+//                        }
+//                        cell.weekDateLabel.textColor = .black
+//                    }
+//                    cell.backgroundColor = .white
+//                }
                 return cell
             }
         }
@@ -243,33 +271,46 @@ extension CalendarViewController: UICollectionViewDataSource {
             addAndMonthBtn.setImage(UIImage(systemName: "calendar"), for: .normal)
             
             let cell = collectionView.cellForItem(at: indexPath) as! DateCell
-            selectedDate = Int(cell.dateLabel.text!)!
+//            selectedDate = days[indexPath.row]
+            selectedDate[1] = Int(cell.dateLabel.text!)!
             
+//            if selectedDate[0] < components.month! {    // 이전달
+//                print("prevMonth")
+//            } else if selectedDate[0] > components.month! { // 다음달
+//                print("nextMonth")
+//            } else {
+//                print("thisMonth")
+//            }
             // MARK: 수정 필요
             if indexPath.row > 35 && Int(cell.dateLabel.text!)! < 7 {   // 이번달 뷰에서 다음달 초를 눌렀을 때
                 prevDayMax = day_Max
                 print("aaa")
+//                prevDayMax = cal.range(of: .day, in: .month, for: firstDayOfMonth!)!.count
+//                prevDayMax = selectedDate[0]-1
             }else if indexPath.row - 7 < 7 && Int(cell.dateLabel.text!)! > 24 {   // 이번달 뷰에서 이전달 말을 눌렀을 때
                 day_Max = prevDayMax
                 print("bbb")
+//                day_Max = selectedDate[0]
             } else {
                 var firstDayOfMonth = cal.date(from: components)
                 day_Max = cal.range(of: .day, in: .month, for: firstDayOfMonth!)!.count
-                
+
                 components.month = components.month! - 1
                 firstDayOfMonth = cal.date(from: components)
                 prevDayMax = cal.range(of: .day, in: .month, for: firstDayOfMonth!)!.count
-                
+
                 components.month = components.month! + 1
                 firstDayOfMonth = cal.date(from: components)
             }
-            selectedIndexPath = indexPath.row % 7
+//            selectedIndexPath = indexPath.row % 7
+            selectedIndexPath = indexPath.row - 7
             isMonth.toggle()
         } else {
 //            let cell = collectionView.cellForItem(at: indexPath) as! WeekDateCell
 //            print(cell.weekDateLabel.text!)
 //            cell.backgroundColor = .lightGray
         }
+        print(selectedIndexPath, days[selectedIndexPath][1])
         collectionView.reloadData()
     }
 }

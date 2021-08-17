@@ -147,13 +147,8 @@
 		234AF01826BF7DE100CB1BDC /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				234AF01926BF7E0600CB1BDC /* HomeViewController.swift */,
-				234AF01C26BF875B00CB1BDC /* HomeCell.swift */,
-				2386E27126BFDCFD008BC45D /* TaskViewController.swift */,
-				23BC52B726C3EC5100EC6A96 /* IconSelectViewController.swift */,
-				231790CC26C8C51000162401 /* WeekDayCell.swift */,
-				238A7F3526CA5D3F009A9679 /* AddCell.swift */,
-				23102B8E26CA96E700E08263 /* TimeCell.swift */,
+				236B784D26CB74D400040A5E /* home */,
+				236B784E26CB74DD00040A5E /* addTask */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -168,6 +163,27 @@
 				235F5BB026C54AE000D9C3DC /* WeekDateCell.swift */,
 			);
 			path = cell;
+			sourceTree = "<group>";
+		};
+		236B784D26CB74D400040A5E /* home */ = {
+			isa = PBXGroup;
+			children = (
+				234AF01926BF7E0600CB1BDC /* HomeViewController.swift */,
+				234AF01C26BF875B00CB1BDC /* HomeCell.swift */,
+				238A7F3526CA5D3F009A9679 /* AddCell.swift */,
+			);
+			path = home;
+			sourceTree = "<group>";
+		};
+		236B784E26CB74DD00040A5E /* addTask */ = {
+			isa = PBXGroup;
+			children = (
+				2386E27126BFDCFD008BC45D /* TaskViewController.swift */,
+				23BC52B726C3EC5100EC6A96 /* IconSelectViewController.swift */,
+				231790CC26C8C51000162401 /* WeekDayCell.swift */,
+				23102B8E26CA96E700E08263 /* TimeCell.swift */,
+			);
+			path = addTask;
 			sourceTree = "<group>";
 		};
 		23849E7826C02D85008CC09F /* UserData */ = {
