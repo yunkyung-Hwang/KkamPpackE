@@ -99,7 +99,6 @@ class CalendarViewController: UIViewController {
                 weekDays[i] = days[i]
             }
             selectedDay = weekDays[cal.component(.weekday, from: cal.date(from: components)!) - 1]
-            print(selectedDay)
         }
 
         self.collectionView.reloadData()
@@ -113,7 +112,6 @@ class CalendarViewController: UIViewController {
                 weekDays[i] = days[i]
             }
             selectedDay = weekDays[cal.component(.weekday, from: cal.date(from: components)!) - 1]
-            print(selectedDay)
         }
         
         self.collectionView.reloadData()

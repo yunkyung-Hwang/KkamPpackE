@@ -24,6 +24,7 @@ class HomeViewController: UIViewController {
     
     static var isEdit = false
     var isReorder = false
+    var isChanged = false
     var isRemove = false
     static var isHomeCollectionView = false
     
@@ -45,6 +46,10 @@ class HomeViewController: UIViewController {
         DailyData("장보기", UIImage(named: "icon")!, [0,1,2,3,4,5,6], 1, "1"),
         DailyData("세차", UIImage(named: "icon")!, [0,1,2,3,4,5,6], 1, "1")
     ]
+    
+    var dailyListTmp = dailyList
+    var homeListTmp = homeList
+    
     override func viewWillDisappear(_ animated: Bool) {
         super .viewWillDisappear(true)
         self.navigationController?.isNavigationBarHidden = false
@@ -204,18 +209,22 @@ class HomeViewController: UIViewController {
             HomeViewController.isEdit = true
             
             titleDate.text = "할 일 편집"
+            listEdtiBtn.setImage(nil, for: .normal)
+            listEdtiBtn.isEnabled = false
         } else if edit == "order" {
             isReorder = true
             titleDate.text = "순서 변경"
+            listEdtiBtn.setImage(UIImage(systemName: "checkmark"), for: .normal)
             
             homeCollectionView.addGestureRecognizer(gesture_home)
             dailyCollectionView.addGestureRecognizer(gesture_daily)
         } else if edit == "remove" {
             isRemove = true
             titleDate.text = "삭제"
+            listEdtiBtn.setImage(nil, for: .normal)
+            listEdtiBtn.isEnabled = false
         }
         titleDate.font = UIFont.boldSystemFont(ofSize: 25)
-        listEdtiBtn.setImage(UIImage(systemName: "checkmark"), for: .normal)
         listEdtiBtn.menu = nil
         closeBtn.setImage(UIImage(systemName: "xmark"), for: .normal)
         closeBtn.tintColor = .black
@@ -224,55 +233,67 @@ class HomeViewController: UIViewController {
         tabBarController?.tabBar.isHidden = true
     }
 
-    @IBAction func saveList(_ sender: Any) {
-        print("save")
-        isSaved = true
-        
+    func closeView() {
+        // 타이틀 라벨 설정
         let date = DateFormatter()
         date.dateFormat = "MM.dd.EEEE"
         date.locale = Locale(identifier: "ko-KR")
         titleDate.text = date.string(from: Date())
         titleDate.font = UIFont.boldSystemFont(ofSize: 29)
         
+        // 순서변경 제스처 삭제
         homeCollectionView.removeGestureRecognizer(gesture_home)
         dailyCollectionView.removeGestureRecognizer(gesture_daily)
         
+        // 퍈집 변수 초기화
         HomeViewController.isEdit = false
         isReorder = false
         isRemove = false
-        homeCollectionView.reloadData()
-        dailyCollectionView.reloadData()
         
+        // 버튼 기능 및 이미지 변경
         listEdtiBtn.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         closeBtn.setImage(UIImage(named: "icon"), for: .normal)
         setMenu()
+        
+        // 탭바 활성화
         tabBarController?.tabBar.isHidden = false
         
-        setCollectionView()
+        // 편집 이미지 삭제 //cell.taskEdit.image = nil
+        homeCollectionView.reloadData()
+        dailyCollectionView.reloadData()
+        //setCollectionView()
+        
+        // 버튼 활성화
+        listEdtiBtn.isEnabled = true
+    }
+    @IBAction func saveList(_ sender: Any) {
+        isSaved = true
+        homeListTmp = HomeViewController.homeList
+        dailyListTmp = HomeViewController.dailyList
+        
+        closeView()
     }
     @IBAction func closeEdit(_ sender: Any) {
+        // 도토리일 때 말고 x일 때만 동작
         if closeBtn.currentImage == UIImage(systemName: "xmark") {
-            let date = DateFormatter()
-            date.dateFormat = "MM.dd.EEEE"
-            date.locale = Locale(identifier: "ko-KR")
-            titleDate.text = date.string(from: Date())
-            titleDate.font = UIFont.boldSystemFont(ofSize: 29)
-            
-            homeCollectionView.removeGestureRecognizer(gesture_home)
-            dailyCollectionView.removeGestureRecognizer(gesture_daily)
-            
-            HomeViewController.isEdit = false
-            isReorder = false
-            isRemove = false
-            homeCollectionView.reloadData()
-            dailyCollectionView.reloadData()
-            
-            listEdtiBtn.setImage(UIImage(systemName: "ellipsis"), for: .normal)
-            closeBtn.setImage(UIImage(named: "icon"), for: .normal)
-            setMenu()
-            tabBarController?.tabBar.isHidden = false
-            
-            setCollectionView()
+            isSaved = false
+            if isChanged {  // 변화 있으면 물어보고
+                let actionSheetController = UIAlertController(title: "", message: "홈으로 이동하시겠습니까?\n편집한 내용은 저장되지 않습니다.", preferredStyle: .alert)
+                let reset = UIAlertAction(title: "홈으로 이동", style: .default) { (action) in
+                    HomeViewController.homeList = self.homeListTmp
+                    HomeViewController.dailyList = self.dailyListTmp
+                    self.closeView()
+                }
+                let cancelAction = UIAlertAction(title: "취소", style: .cancel) { action -> Void in }
+
+                actionSheetController.addAction(reset)
+                actionSheetController.addAction(cancelAction)
+
+                self.present(actionSheetController, animated: true, completion: nil)
+                self.isChanged = false
+            } else {    // 변화 없으면 그냥 닫기
+                closeView()
+            }
         }
     }
 }
@@ -481,5 +502,6 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout, UICollectionVi
             let item = HomeViewController.dailyList.remove(at: sourceIndexPath.row)
             HomeViewController.dailyList.insert(item, at: destinationIndexPath.row)
         }
+        isChanged = true
     }
 }
