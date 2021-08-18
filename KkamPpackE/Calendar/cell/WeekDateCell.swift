@@ -10,4 +10,13 @@ import UIKit
 class WeekDateCell: UICollectionViewCell {
     @IBOutlet weak var weekDateLabel: UILabel!
     
+    override var isSelected: Bool {
+        didSet {
+            if isSelected {
+                backgroundColor = .lightGray
+            } else {
+                backgroundColor = .clear
+            }
+        }
+    }
 }
