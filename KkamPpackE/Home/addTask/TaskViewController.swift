@@ -12,12 +12,20 @@ class TaskViewController: UIViewController {
     @IBOutlet weak var taskName: UITextField!
     @IBOutlet weak var dayCnt: UITextField!
     @IBOutlet weak var alarmCnt: UITextField!
+    @IBOutlet weak var recordState: UISwitch!
     
     @IBOutlet weak var daysCollectionView: UICollectionView!
     @IBOutlet weak var timeCollectionView: UICollectionView!
     
     @IBOutlet weak var recordLabelAnchor: NSLayoutConstraint!
     @IBOutlet weak var recordToggleAnchor: NSLayoutConstraint!
+    
+    var receivedImg = UIImage()
+    var receivedName = ""
+    var receivedChosedDay = [true, true, true, true, true, true, true]
+    var receivedDayCnt = 1
+    var receivedAlarmCnt = 1
+    var receivedState = true
     
     let days = ["일","월","화","수","목","금","토"]
     let dayCount = ["1", "2", "3"]
@@ -28,7 +36,7 @@ class TaskViewController: UIViewController {
     let alarmPicker = UIPickerView()
     
     // 전송용 변수
-    var selectedDays = [Int]()
+    var selectedDays = [false,false,false,false,false,false,false]
     
     override func viewWillDisappear(_ animated: Bool) {
         super .viewWillDisappear(true)
@@ -45,7 +53,6 @@ class TaskViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "checkmark"), style: .plain, target: self, action: #selector(self.saveTask))
         navigationItem.rightBarButtonItem?.tintColor = .black
         
-        
         taskImg.layer.cornerRadius = taskImg.frame.height / 2
         
         taskName.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: taskName.frame.height))
@@ -58,21 +65,47 @@ class TaskViewController: UIViewController {
         daysCollectionView.delegate = self
         daysCollectionView.allowsMultipleSelection = true
         
-        for i in 0...6 {
-            daysCollectionView.selectItem(at: [0,i], animated: false, scrollPosition: .init())
-        }
-        
         dayCnt.layer.borderWidth = 1
         dayCnt.layer.borderColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
         dayCnt.layer.cornerRadius = taskName.frame.height / 2
         dayCnt.tintColor = .clear
-        dayCnt.text = "1"
         
         alarmCnt.layer.borderWidth = 1
         alarmCnt.layer.borderColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
         alarmCnt.layer.cornerRadius = taskName.frame.height / 2
         alarmCnt.tintColor = .clear
         alarmCnt.text = "1"
+        
+        // 초기값 설정
+        taskImg.setImage(receivedImg, for: .normal)
+        taskName.text = self.receivedName
+
+        for i in 0...6 {
+            if receivedChosedDay[i] {
+                daysCollectionView.selectItem(at: [0,i], animated: false, scrollPosition: .init())
+            }
+        }
+        
+        dayCnt.text = "\(receivedDayCnt)"
+        
+        if receivedAlarmCnt == 0{
+            alarmCnt.text = "없음"
+        } else {
+            alarmCnt.text = "\(receivedAlarmCnt)"
+        }
+        
+        if alarmCnt.text == "없음" {
+            alarmTime.removeAll()
+        } else if alarmCnt.text == "1" {
+            alarmTime = ["09:00"]
+        } else if alarmCnt.text == "2" {
+            alarmTime = ["09:00", "12:00"]
+        } else {//if alarmCnt.text == "3" {
+            alarmTime = ["09:00", "12:00", "18:00"]
+        }
+        
+        recordState.isOn = receivedState
+        
         
         timeCollectionView.dataSource = self
         timeCollectionView.delegate = self
@@ -97,36 +130,60 @@ class TaskViewController: UIViewController {
         // 요일 저장
         if let day = daysCollectionView.indexPathsForSelectedItems {
             for i in 0..<day.count {
-                selectedDays.append(day[i].row)
+                selectedDays[day[i].row] = true
             }
         }
-        // 값을 제대로 입력하지 않았을 때
-        if taskName.text == "" || selectedDays.count == 0 || dayCnt.text == "" || alarmCnt.text == "" {
-            
-            let alert = UIAlertController(title: "모든 항목을 입력해주세요", message: "", preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
-
-            self.present(alert, animated: true, completion: nil)
-        } else {
-            // 구조체 추가해서 서버에 전송
-            if HomeViewController.isEdit {
-                print("태스크 수정됨")
-            } else {
-                if HomeViewController.isHomeCollectionView {
-                    HomeViewController.homeList.append(HomeData(taskName.text!, UIImage(named: "icon")!))
+        // 편집상태로 들어왔을 때
+        if HomeViewController.isEdit {
+            let indexPath = HomeViewController.selectedTaskIndexPath
+            if HomeViewController.isHomeCollectionView {
+                HomeViewController.homeList[indexPath].icon = taskImg.image(for: .normal)
+                HomeViewController.homeList[indexPath].name = taskName.text
+                HomeViewController.homeList[indexPath].day = selectedDays
+                HomeViewController.homeList[indexPath].dayCnt = Int(dayCnt.text!)
+                if alarmCnt.text == "없음" {
+                    HomeViewController.homeList[indexPath].alarmCnt = 0
                 } else {
-                    HomeViewController.dailyList.append(DailyData(taskName.text!, UIImage(named: "icon")!, selectedDays, Int(dayCnt.text!)!, alarmCnt.text!))
+                    HomeViewController.homeList[indexPath].alarmCnt = Int(alarmCnt.text!)
                 }
+                HomeViewController.homeList[indexPath].recordState = recordState.isOn
+                
+            } else {
+                HomeViewController.dailyList[indexPath].icon = taskImg.image(for: .normal)
+                HomeViewController.dailyList[indexPath].name = taskName.text
+                HomeViewController.dailyList[indexPath].day = selectedDays
+                HomeViewController.dailyList[indexPath].dayCnt = Int(dayCnt.text!)
+                if alarmCnt.text == "없음" {
+                    HomeViewController.dailyList[indexPath].alarmCnt = 0
+                } else {
+                    HomeViewController.dailyList[indexPath].alarmCnt = Int(alarmCnt.text!)
+                }
+                HomeViewController.dailyList[indexPath].recordState = recordState.isOn
             }
-            navigationController?.popViewController(animated: true)
-
-            print("태스크 이름:",taskName.text!,"\n요일:",selectedDays.sorted(), "\n1일 횟수:",dayCnt.text!, "\n알림 횟수:", alarmCnt.text! )
         }
+        // 태스크 추가 상태로 들어왔을 떄
+        else {
+            // 값을 제대로 입력하지 않았을 때
+            if taskName.text == "" || selectedDays.count == 0 || dayCnt.text == "" || alarmCnt.text == "" {
+                
+                let alert = UIAlertController(title: "모든 항목을 입력해주세요", message: "", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
+                
+                self.present(alert, animated: true, completion: nil)
+            } else {    // 태스크 추가
+                if HomeViewController.isHomeCollectionView {
+                    HomeViewController.homeList.append(HomeData(taskName.text!, UIImage(named: "icon")!, selectedDays, Int(dayCnt.text!)!,Int(alarmCnt.text!)!, recordState.isOn))
+                } else {
+                    HomeViewController.dailyList.append(DailyData(taskName.text!, UIImage(named: "icon")!, selectedDays, Int(dayCnt.text!)!, Int(alarmCnt.text!)!, recordState.isOn))
+                }
+//                print("태스크 이름:",taskName.text!,"\n요일:",selectedDays, "\n1일 횟수:",dayCnt.text!, "\n알림 횟수:", alarmCnt.text! )
+            }
+        }
+        navigationController?.popViewController(animated: true)
     }
     @objc func onPickDone() {
         if alarmCnt.text == "없음" {
             alarmTime.removeAll()
-            print("다 지움")
         } else if alarmCnt.text == "1" {
             alarmTime = ["09:00"]
         } else if alarmCnt.text == "2" {

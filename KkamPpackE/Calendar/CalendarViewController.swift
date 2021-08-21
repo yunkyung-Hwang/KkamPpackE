@@ -12,9 +12,10 @@ class CalendarViewController: UIViewController {
     @IBOutlet weak var weekView: UIView!
     
     @IBOutlet weak var addAndMonthBtn: UIButton!
-    @IBOutlet weak var yearMonthLabel: UILabel!
+    @IBOutlet weak var yearMonthLabel: UITextField!
     
     var isMonth = true
+    var selectedWeek = 0
     
     let now = Date()
     var cal = Calendar.current
@@ -55,11 +56,10 @@ class CalendarViewController: UIViewController {
         collectionView.layer.borderColor = UIColor.lightGray.cgColor
         collectionView.layer.cornerRadius = 15
 
-        dateFormatter.dateFormat = "yyyy년 MM월" // 월 표시 포맷 설정
+        dateFormatter.dateFormat = "yyyy년 M월" // 월 표시 포맷 설정
         components.year = cal.component(.year, from: now)
         components.month = cal.component(.month, from: now)
         components.day = 1
-        
         self.calculation()
     }
     
@@ -78,7 +78,12 @@ class CalendarViewController: UIViewController {
         // 요일
         weekdayAdding = 2 - firstWeekday
         
-        self.yearMonthLabel.text = dateFormatter.string(from: firstDayOfMonth!)
+        // 주간 날짜 배열 초기화
+        if isMonth {
+            self.yearMonthLabel.text = dateFormatter.string(from: firstDayOfMonth!)
+        } else {
+            self.yearMonthLabel.text! = dateFormatter.string(from: firstDayOfMonth!) + " \(selectedWeek)" + "주"
+        }
         
         for day in weekdayAdding...(42 + weekdayAdding - 1) {
             if day < 1 {
@@ -93,14 +98,13 @@ class CalendarViewController: UIViewController {
     @IBAction func nextMonthBtn(_ sender: Any) {
         components.month = components.month! + 1
         self.calculation()
-        
         if !isMonth {
             for i in 0...6 {
                 weekDays[i] = days[i]
             }
             selectedDay = weekDays[cal.component(.weekday, from: cal.date(from: components)!) - 1]
         }
-
+        
         self.collectionView.reloadData()
     }
     @IBAction func prevMonthBtn(_ sender: Any) {
@@ -170,21 +174,19 @@ extension CalendarViewController: UICollectionViewDataSource {
                 } else {    // 이번달 이면
                     cell.dateLabel.textColor = .black
                     // 오늘 날짜인 경우 색칠
-                    if components.month == cal.component(.month, from: now) && days[indexPath.row - 7][1] == cal.component(.day, from: now) {
+                    if days[indexPath.row - 7][0] == cal.component(.month, from: now) && days[indexPath.row - 7][1] == cal.component(.day, from: now) {
                         cell.dateLabel.clipsToBounds = true
                         cell.dateLabel.backgroundColor = .lightGray
                         cell.dateLabel.layer.cornerRadius = cell.dateLabel.frame.height/2
                     } else {
                         cell.dateLabel.backgroundColor = .white
                     }
-                    
                     // 태스크 개수 표시
 //                    cell.taskCnt.clipsToBounds = true
 //                    cell.taskCnt.layer.cornerRadius = cell.taskCnt.frame.height / 2
 //                    cell.taskCnt.backgroundColor = #colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1)
                     cell.taskCnt.textColor = .white
                 }
-                
                 return cell
             } else {    // 주간
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "weekdateCell", for: indexPath) as! WeekDateCell
@@ -223,10 +225,25 @@ extension CalendarViewController: UICollectionViewDataSource {
             addAndMonthBtn.setImage(UIImage(systemName: "calendar"), for: .normal)
             
             // 주간 날짜 배열 초기화
-            let week = (indexPath.row - 7) / 7  // 몇째주
+            let week = (indexPath.row - 7) / 7  // 0째 ~ 마지막째 주
+            
             for i in 0...6 {
                 weekDays[i] = days[i + week * 7]
             }
+            print(days[indexPath.row - 7][0], components.month!)
+            if days[indexPath.row - 7][0] == components.month! - 1 {    // 이전달이면
+                if (prevDayMax + weekdayAdding - 1) % 7 != 0 {
+                    selectedWeek = (prevDayMax + weekdayAdding - 1) / 7 + 2
+                } else {
+                    selectedWeek = (prevDayMax + weekdayAdding - 1) / 7 + 1
+                }
+            } else if days[indexPath.row - 7][0] == components.month! + 1{  // 다음달이먄
+                selectedWeek = week - ((day_Max - weekdayAdding + 1) / 7) + 1
+            } else {
+                selectedWeek = week + 1
+            }
+           
+            
             // 선택된 셀의 인덱스 저장
             selectedIndexPath = indexPath.row - 7
             

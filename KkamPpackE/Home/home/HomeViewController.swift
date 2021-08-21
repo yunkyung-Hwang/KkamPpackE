@@ -18,6 +18,7 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var dailyTitleTopAnchor: NSLayoutConstraint!
     
     var isSaved = false
+    static var selectedTaskIndexPath = 0
     
     var homeCVCnt = 0
     var dailyCVCnt = 0
@@ -32,19 +33,19 @@ class HomeViewController: UIViewController {
     var gesture_daily = UILongPressGestureRecognizer()
     
     public static var homeList = [
-        HomeData("가스불", UIImage(named: "icon")!),
-        HomeData("전등", UIImage(named: "icon")!),
-        HomeData("마스크", UIImage(named: "icon")!),
-        HomeData("지갑", UIImage(named: "icon")!),
-        HomeData("창문", UIImage(named: "icon")!)
+        HomeData("가스불", UIImage(named: "icon")!, [true,true,true,true,true,true,true], 1, 1, true),
+        HomeData("전등", UIImage(named: "icon")!, [true,false,true,false,true,false,true], 2, 2, true),
+        HomeData("마스크", UIImage(named: "icon")!, [true,true,true,true,true,true,true], 3, 3, true),
+        HomeData("지갑", UIImage(named: "icon")!, [true,true,true,true,true,true,true], 2, 2, true),
+        HomeData("창문", UIImage(named: "icon")!, [true,true,true,true,true,true,true], 1, 0, true)
     ]
     
     public static var dailyList = [
-        DailyData("운동", UIImage(named: "icon")!, [0,1,2,3,4,5,6], 1, "1"),
-        DailyData("약먹기", UIImage(named: "icon")!, [0,1,2,3,4,5,6], 1, "1"),
-        DailyData("분리수거", UIImage(named: "icon")!, [0,1,2,3,4,5,6], 1, "1"),
-        DailyData("장보기", UIImage(named: "icon")!, [0,1,2,3,4,5,6], 1, "1"),
-        DailyData("세차", UIImage(named: "icon")!, [0,1,2,3,4,5,6], 1, "1")
+        DailyData("운동", UIImage(named: "icon")!, [true,true,true,true,true,true,true], 1, 1, true),
+        DailyData("약먹기", UIImage(named: "icon")!, [true,true,true,true,true,true,true], 2, 2, true),
+        DailyData("분리수거", UIImage(named: "icon")!, [true,true,true,true,true,true,true], 3, 3, true),
+        DailyData("장보기", UIImage(named: "icon")!, [true,true,true,true,true,true,true], 2, 2, true),
+        DailyData("세차", UIImage(named: "icon")!, [true,true,true,true,true,true,true], 1, 0, true)
     ]
     
     var dailyListTmp = dailyList
@@ -103,9 +104,6 @@ class HomeViewController: UIViewController {
         let areaX = CGFloat(HomeViewController.homeList.count % 3 * 120)
         let areaY = CGFloat(HomeViewController.homeList.count / 3 * 120)
         
-//        print("x,y:",areaX, areaY)
-//        guard let cell = homeCollectionView.cellForItem(at: homeSelectedIndexPath) else { return }
-        
         switch(gesture.state) {
         case .began:
             if homeSelectedIndexPath[1] < HomeViewController.homeList.count {
@@ -117,7 +115,6 @@ class HomeViewController: UIViewController {
                 homeCollectionView.cancelInteractiveMovement()
             }
             homeCollectionView.updateInteractiveMovementTargetPosition(location)
-            
 //            homeCollectionView.updateInteractiveMovementTargetPosition(gesture.location(in: homeCollectionView))  // 자유 움직임
         case .ended:
             homeCollectionView.endInteractiveMovement()
@@ -148,6 +145,7 @@ class HomeViewController: UIViewController {
             dailyCollectionView.cancelInteractiveMovement()
         }
     }
+    
     func setCollectionView() {
         var homeHeight = 0
         var dailyHeight = 0
@@ -189,7 +187,6 @@ class HomeViewController: UIViewController {
     }
     
     func setMenu() {
-//        print(dailyList[0].name!,dailyList[0].day,dailyList[0].dayCnt!,dailyList[0].alarmCnt!)
         var menuItems: [UIAction] {
             return [
                 UIAction(title: "할 일 편집", image: UIImage(systemName: "pencil"), handler: {[self] _ in list(edit: "edit")}),
@@ -405,10 +402,31 @@ extension HomeViewController: UICollectionViewDataSource {
             guard let uvc = self.storyboard?.instantiateViewController(identifier: "addTaskView") else { return }
             self.navigationController?.pushViewController(uvc, animated: true)
         } else if cell?.reuseIdentifier != "noneCell"{
+            let cell = collectionView.cellForItem(at: indexPath) as! HomeCell
             if HomeViewController.isEdit {
                 print("태스크 변경")
-                guard let uvc = self.storyboard?.instantiateViewController(identifier: "addTaskView") else{ return }
-                self.navigationController?.pushViewController(uvc, animated: true)
+                HomeViewController.selectedTaskIndexPath = indexPath.row
+                guard let taskVC = self.storyboard?.instantiateViewController(identifier: "addTaskView") as? TaskViewController else{ return }
+                
+                if collectionView == homeCollectionView {
+                    HomeViewController.isHomeCollectionView = true
+                    taskVC.receivedImg = HomeViewController.homeList[indexPath.row].icon
+                    taskVC.receivedName = HomeViewController.homeList[indexPath.row].name
+                    taskVC.receivedChosedDay = HomeViewController.homeList[indexPath.row].day
+                    taskVC.receivedDayCnt = HomeViewController.homeList[indexPath.row].dayCnt
+                    taskVC.receivedAlarmCnt = HomeViewController.homeList[indexPath.row].alarmCnt
+                    taskVC.receivedState = HomeViewController.homeList[indexPath.row].recordState
+                } else {
+                    HomeViewController.isHomeCollectionView = false
+                    taskVC.receivedImg = HomeViewController.dailyList[indexPath.row].icon
+                    taskVC.receivedName = HomeViewController.dailyList[indexPath.row].name
+                    taskVC.receivedChosedDay = HomeViewController.dailyList[indexPath.row].day
+                    taskVC.receivedDayCnt = HomeViewController.dailyList[indexPath.row].dayCnt
+                    taskVC.receivedAlarmCnt = HomeViewController.dailyList[indexPath.row].alarmCnt
+                    taskVC.receivedState = HomeViewController.dailyList[indexPath.row].recordState
+                }
+                
+                self.navigationController?.pushViewController(taskVC, animated: true)
             } else if isRemove {
                 print("목록 삭제")
 
@@ -450,7 +468,6 @@ extension HomeViewController: UICollectionViewDataSource {
                 if indexPath.row == cnt{ //더보기 버튼
                     print("더보기 Btn")
                 } else {    // 나머지
-                    let cell = collectionView.cellForItem(at: indexPath) as! HomeCell
                     print(cell.taskName.text!)
                     
                     if cell.tappedCnt == 0 {
