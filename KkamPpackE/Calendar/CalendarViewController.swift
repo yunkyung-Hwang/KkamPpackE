@@ -30,6 +30,9 @@ class CalendarViewController: UIViewController {
     var prevDayMax = 0
     var weekdayAdding = 0 // 시작일
     
+    var prevLastWeek = 0
+    var thisLastWeek = 0
+    
     var selectedIndexPath = 0
     
     
@@ -68,23 +71,39 @@ class CalendarViewController: UIViewController {
         let firstDayOfMonth = cal.date(from: components)
         let firstWeekday = cal.component(.weekday, from: firstDayOfMonth!) // 해당 수로 반환. 1: 일요일 ~ 7: 토요일
         
-        components.month! -= 1
-        prevDayMax = cal.range(of: .day, in: .month, for: cal.date(from: components)!)!.count
-        
-        components.month! += 1
-        day_Max = cal.range(of: .day, in: .month, for: firstDayOfMonth!)!.count // 8월: 1..<32
-
-        
         // 요일
         weekdayAdding = 2 - firstWeekday
         
-        // 주간 날짜 배열 초기화
+        // prevMonth
+        components.month! -= 1
+        prevDayMax = cal.range(of: .day, in: .month, for: cal.date(from: components)!)!.count
+        
+        // prevLastWeek
+        if (prevDayMax + (7 + weekdayAdding - 1)) % 7 == 0 || weekdayAdding == 1{
+            prevLastWeek = (prevDayMax + (7 + weekdayAdding - 1)) / 7
+        } else {
+            prevLastWeek = (prevDayMax + (7 + weekdayAdding - 1)) / 7 + 1
+        }
+        
+        // thisMonth
+        components.month! += 1
+        day_Max = cal.range(of: .day, in: .month, for: firstDayOfMonth!)!.count // 8월: 1..<32
+        
+        // thisLastWeek
+        if (day_Max - weekdayAdding + 1) % 7 == 0 {
+            thisLastWeek = (day_Max - weekdayAdding + 1) / 7
+        } else {
+            thisLastWeek = (day_Max - weekdayAdding + 1) / 7 + 1
+        }
+        
+        // titleDate 초기화
         if isMonth {
             self.yearMonthLabel.text = dateFormatter.string(from: firstDayOfMonth!)
         } else {
             self.yearMonthLabel.text! = dateFormatter.string(from: firstDayOfMonth!) + " \(selectedWeek)" + "주"
         }
         
+        // 주간 날짜 배열 초기화
         for day in weekdayAdding...(42 + weekdayAdding - 1) {
             if day < 1 {
                 days[day + firstWeekday - 2] = [components.month! - 1, day + prevDayMax]
@@ -96,30 +115,56 @@ class CalendarViewController: UIViewController {
         }
     }
     @IBAction func nextMonthBtn(_ sender: Any) {
-        components.month = components.month! + 1
-        self.calculation()
-        if !isMonth {
-            for i in 0...6 {
-                weekDays[i] = days[i]
+        if isMonth {    // 월간이면 다음달로
+            components.month = components.month! + 1
+            self.calculation()
+        } else {        // 주간이면 다음주로
+            selectedWeek += 1
+            // 선택 주가 마지막주를 넘어가면 다음달 첫주로
+            if selectedWeek > thisLastWeek {
+                components.month = components.month! + 1
+                self.calculation()
+                selectedWeek = 1
             }
-            selectedDay = weekDays[cal.component(.weekday, from: cal.date(from: components)!) - 1]
+            // 배열 초기화
+            for i in 0...6 {
+                weekDays[i] = days[i + (selectedWeek - 1) * 7]
+            }
+            // 이동시 디폴트는 해당 주의 첫요일(일요일)
+            if selectedWeek == 1 {
+                selectedDay = weekDays[cal.component(.weekday, from: cal.date(from: components)!) - 1]
+            } else {
+                selectedDay = weekDays[0]
+            }
         }
-        
         self.collectionView.reloadData()
     }
     @IBAction func prevMonthBtn(_ sender: Any) {
-        components.month = components.month! - 1
-        self.calculation()
-        
-        if !isMonth {
-            for i in 0...6 {
-                weekDays[i] = days[i]
+        if isMonth {    // 월간이면 이전달로
+            components.month = components.month! - 1
+            self.calculation()
+        } else {        // 주간이면 이전주로
+            selectedWeek -= 1
+            // 선택 주가 첫 주를 넘어가면 이전달 마지막 주로
+            if selectedWeek < 1 {
+                components.month = components.month! - 1
+                self.calculation()
+                selectedWeek = prevLastWeek
             }
-            selectedDay = weekDays[cal.component(.weekday, from: cal.date(from: components)!) - 1]
+            // 배열 초기화
+            for i in 0...6 {
+                weekDays[i] = days[i + (selectedWeek - 1) * 7]
+            }
+            // 이동시 디폴트는 해당 주의 첫요일(일요일)
+            if selectedWeek == 1 {
+                selectedDay = weekDays[cal.component(.weekday, from: cal.date(from: components)!) - 1]
+            } else {
+                selectedDay = weekDays[0]
+            }
         }
-        
         self.collectionView.reloadData()
     }
+    
     @IBAction func addAndMonthBtn(_ sender: Any) {
         if isMonth {    // 월간 화면일때 눌리면
             guard let uvc = self.storyboard?.instantiateViewController(identifier: "addPlanView") else{
@@ -211,7 +256,6 @@ extension CalendarViewController: UICollectionViewDataSource {
                 } else {
                     cell.weekDateLabel.textColor = .black
                 }
-                
                 return cell
             }
         }
