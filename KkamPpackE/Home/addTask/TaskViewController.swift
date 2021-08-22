@@ -32,8 +32,13 @@ class TaskViewController: UIViewController {
     let alarmCount = ["없음","1", "2", "3"]
     var alarmTime = ["09:00"]
     
+    let dateFormatter = DateFormatter()
+    
     let dayPicker = UIPickerView()
     let alarmPicker = UIPickerView()
+    let timePicker = UIDatePicker()
+    let timePicker2 = UIDatePicker()
+    let timePicker3 = UIDatePicker()
     
     // 전송용 변수
     var selectedDays = [false,false,false,false,false,false,false]
@@ -52,6 +57,8 @@ class TaskViewController: UIViewController {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "checkmark"), style: .plain, target: self, action: #selector(self.saveTask))
         navigationItem.rightBarButtonItem?.tintColor = .black
+        
+        dateFormatter.dateFormat = "HH:mm"
         
         taskImg.layer.cornerRadius = taskImg.frame.height / 2
         
@@ -75,6 +82,14 @@ class TaskViewController: UIViewController {
         alarmCnt.layer.cornerRadius = taskName.frame.height / 2
         alarmCnt.tintColor = .clear
         alarmCnt.text = "1"
+        
+        timePicker.preferredDatePickerStyle = .wheels
+        timePicker.datePickerMode = .time
+        timePicker2.preferredDatePickerStyle = .wheels
+        timePicker2.datePickerMode = .time
+        timePicker3.preferredDatePickerStyle = .wheels
+        timePicker3.datePickerMode = .time
+        
         
         // 초기값 설정
         taskImg.setImage(receivedImg, for: .normal)
@@ -124,9 +139,13 @@ class TaskViewController: UIViewController {
         
         dismissPickerView()
     }
-
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
+        self.view.endEditing(true)
+    }
     
     @objc func saveTask(){
+        self.view.endEditing(true)
         // 요일 저장
         if let day = daysCollectionView.indexPathsForSelectedItems {
             for i in 0..<day.count {
@@ -176,11 +195,11 @@ class TaskViewController: UIViewController {
                 } else {
                     HomeViewController.dailyList.append(DailyData(taskName.text!, UIImage(named: "icon")!, selectedDays, Int(dayCnt.text!)!, Int(alarmCnt.text!)!, recordState.isOn))
                 }
-//                print("태스크 이름:",taskName.text!,"\n요일:",selectedDays, "\n1일 횟수:",dayCnt.text!, "\n알림 횟수:", alarmCnt.text! )
             }
         }
         navigationController?.popViewController(animated: true)
     }
+    
     @objc func onPickDone() {
         if alarmCnt.text == "없음" {
             alarmTime.removeAll()
@@ -277,18 +296,34 @@ extension TaskViewController: UICollectionViewDataSource {
             cell.layer.borderColor = #colorLiteral(red: 0.6666666865, green: 0.6666666865, blue: 0.6666666865, alpha: 1)
             cell.layer.cornerRadius = cell.frame.height / 2
             cell.timeTField.text = alarmTime[indexPath.row]
+//            cell.timeTField.isUserInteractionEnabled = false
+            if indexPath.row == 0 {
+                if let time = dateFormatter.date(from: alarmTime[indexPath.row]) {
+                    cell.timeTField.inputView = timePicker
+                    timePicker.date = time
+                }
+            } else if indexPath.row == 1 {
+                if let time2 = dateFormatter.date(from: alarmTime[indexPath.row]) {
+                    cell.timeTField.inputView = timePicker2
+                    timePicker2.date = time2
+                }
+            } else {
+                if let time3 = dateFormatter.date(from: alarmTime[indexPath.row]) {
+                    cell.timeTField.inputView = timePicker3
+                    timePicker3.date = time3
+                }
+            }
             
             return cell
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.view.endEditing(true)
         
         if collectionView == daysCollectionView {
             let cell = daysCollectionView.cellForItem(at: indexPath) as! WeekDayCell
             cell.isSelected.toggle()
-        } else {
-            
         }
     }
 }

@@ -10,4 +10,13 @@ import UIKit
 class TimeCell: UICollectionViewCell {
     @IBOutlet weak var timeTField: UITextField!
     
+//    override var isSelected: Bool {
+//        didSet {
+//            if isSelected {
+//                timeTField.isUserInteractionEnabled = true
+//            } else {
+//                timeTField.isUserInteractionEnabled = false
+//            }
+//        }
+//    }
 }

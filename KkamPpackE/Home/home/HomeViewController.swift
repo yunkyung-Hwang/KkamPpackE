@@ -98,7 +98,7 @@ class HomeViewController: UIViewController {
         gesture_daily = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressGesture_daily(_:)))
         gesture_daily.minimumPressDuration = 0.01
     }
-
+    
     @objc func handleLongPressGesture_home(_ gesture: UILongPressGestureRecognizer) {
         guard let homeSelectedIndexPath = homeCollectionView.indexPathForItem(at: gesture.location(in: homeCollectionView)) else { return }
         let areaX = CGFloat(HomeViewController.homeList.count % 3 * 120)

@@ -17,6 +17,12 @@ class CalendarViewController: UIViewController {
     var isMonth = true
     var selectedWeek = 0
     
+    
+    let datePicker = UIPickerView()
+    let years_months = [Array(1900...2200), Array(1...12)]
+    var yearTmp = 0
+    var monthTmp = 0
+    
     let now = Date()
     var cal = Calendar.current
     let dateFormatter = DateFormatter()
@@ -64,8 +70,22 @@ class CalendarViewController: UIViewController {
         components.month = cal.component(.month, from: now)
         components.day = 1
         self.calculation()
+        
+        
+        datePicker.delegate = self
+        yearMonthLabel.inputView = datePicker
+        yearMonthLabel.tintColor = .clear
+        
+        
+        yearTmp = components.year!
+        monthTmp = components.month!
+        datePicker.selectRow(components.year! - 1900, inComponent: 0, animated: true)
+        datePicker.selectRow(components.month! - 1, inComponent: 1, animated: true)
+        dismissPickerView()
     }
-    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
+        self.view.endEditing(true)
+    }
     private func calculation() { // 월 별 일 수 계산
         
         let firstDayOfMonth = cal.date(from: components)
@@ -115,6 +135,8 @@ class CalendarViewController: UIViewController {
         }
     }
     @IBAction func nextMonthBtn(_ sender: Any) {
+        self.view.endEditing(true)
+        
         if isMonth {    // 월간이면 다음달로
             components.month = components.month! + 1
             self.calculation()
@@ -140,6 +162,8 @@ class CalendarViewController: UIViewController {
         self.collectionView.reloadData()
     }
     @IBAction func prevMonthBtn(_ sender: Any) {
+        self.view.endEditing(true)
+        
         if isMonth {    // 월간이면 이전달로
             components.month = components.month! - 1
             self.calculation()
@@ -176,6 +200,30 @@ class CalendarViewController: UIViewController {
             isMonth.toggle()
             collectionView.reloadData()
         }
+    }
+    @objc func onPickDone() {
+        components.year = yearTmp
+        components.month = monthTmp
+        print(yearTmp, monthTmp)
+        calculation()
+        if !isMonth {
+            selectedWeek = 1
+            for i in 0...6 {
+                weekDays[i] = days[i]
+            }
+            selectedDay = weekDays[cal.component(.weekday, from: cal.date(from: components)!) - 1]
+        }
+        collectionView.reloadData()
+        yearMonthLabel.resignFirstResponder()
+    }
+    func dismissPickerView() {
+        let toolBar = UIToolbar()
+        toolBar.sizeToFit()
+        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
+        let button = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(self.onPickDone))
+        toolBar.setItems([space, button], animated: true)
+        toolBar.isUserInteractionEnabled = true
+        yearMonthLabel.inputAccessoryView = toolBar
     }
 }
 
@@ -262,6 +310,8 @@ extension CalendarViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.view.endEditing(true)
+        
         if indexPath.row < 7 {
             return
         }
@@ -334,5 +384,34 @@ extension CalendarViewController: UICollectionViewDelegateFlowLayout {
             weekView.frame = CGRect(x: 20, y: 200, width: 374, height: 459)
         }
         return size
+    }
+}
+
+extension CalendarViewController: UIPickerViewDataSource, UIPickerViewDelegate {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return years_months.count
+    }
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return years_months[component].count
+    }
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        if component == 0 {
+            return String(years_months[component][row])+"년"
+        } else {
+            return String(years_months[component][row])+"월"
+        }
+    }
+    func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+        return 130
+    }
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        switch component {
+        case 0:
+            yearTmp = years_months[0][row]
+        case 1:
+            monthTmp = years_months[1][row]
+        default :
+            return
+        }
     }
 }
