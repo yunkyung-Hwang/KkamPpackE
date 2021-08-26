@@ -27,13 +27,14 @@ class AddPlan: UIViewController {
         planTitle.layer.cornerRadius = planTitle.frame.height / 2
         
         let date = DateFormatter()
-        date.dateFormat = "YYYY년 MM월 dd일"
+        date.dateFormat = "YYYY년 MM월 dd일 hh:mm a"
         
         startDate.layer.borderWidth = 1
         startDate.layer.borderColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1).cgColor
         startDate.layer.cornerRadius = startDate.frame.height / 2
         startDate.backgroundColor = .white
         startDate.setTitle(date.string(from: Date()), for: .normal)
+        startDate.titleLabel?.font = UIFont(name: "System", size: 16)
         startDate.setTitleColor(.black, for: .normal)
         
         endDate.layer.borderWidth = 1
@@ -41,6 +42,7 @@ class AddPlan: UIViewController {
         endDate.layer.cornerRadius = startDate.frame.height / 2
         endDate.backgroundColor = .white
         endDate.setTitle(date.string(from: Date()), for: .normal)
+        endDate.titleLabel?.font = UIFont(name: "System", size: 16)
         endDate.setTitleColor(.black, for: .normal)
         
         memoField.layer.borderWidth = 1
@@ -51,5 +53,19 @@ class AddPlan: UIViewController {
         print("저장됨")
         // 구조체 추가해서 서버에 전송
         navigationController?.popViewController(animated: true)
+    }
+    @IBAction func selectStartDate(_ sender: Any) {
+        guard let selectVC = self.storyboard?.instantiateViewController(identifier: "dateSelectView") as? SelectDateViewController else { return }
+        
+        selectVC.navTitle = "시작일"
+        
+        present(selectVC, animated: true, completion: nil)
+    }
+    @IBAction func selectEndDate(_ sender: Any) {
+        guard let selectVC = self.storyboard?.instantiateViewController(identifier: "dateSelectView") as? SelectDateViewController else { return }
+        
+        selectVC.navTitle = "종료일"
+        
+        present(selectVC, animated: true, completion: nil)
     }
 }

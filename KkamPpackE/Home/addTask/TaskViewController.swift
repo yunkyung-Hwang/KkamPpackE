@@ -40,12 +40,12 @@ class TaskViewController: UIViewController {
     let timePicker2 = UIDatePicker()
     let timePicker3 = UIDatePicker()
     
+    
     // 전송용 변수
     var selectedDays = [false,false,false,false,false,false,false]
     
     override func viewWillDisappear(_ animated: Bool) {
         super .viewWillDisappear(true)
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -57,8 +57,6 @@ class TaskViewController: UIViewController {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "checkmark"), style: .plain, target: self, action: #selector(self.saveTask))
         navigationItem.rightBarButtonItem?.tintColor = .black
-        
-        dateFormatter.dateFormat = "HH:mm"
         
         taskImg.layer.cornerRadius = taskImg.frame.height / 2
         
@@ -83,12 +81,31 @@ class TaskViewController: UIViewController {
         alarmCnt.tintColor = .clear
         alarmCnt.text = "1"
         
+        
+        timeCollectionView.dataSource = self
+        timeCollectionView.delegate = self
+        timeCollectionView.collectionViewLayout = UICollectionViewFlowLayout()
+        if let layout = timeCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            layout.scrollDirection = .horizontal
+        }
+        
+        dayPicker.delegate = self
+        alarmPicker.delegate = self
+        dayPicker.dataSource = self
+        alarmPicker.dataSource = self
+        
+        dateFormatter.dateFormat = "hh:mm a"
         timePicker.preferredDatePickerStyle = .wheels
         timePicker.datePickerMode = .time
         timePicker2.preferredDatePickerStyle = .wheels
         timePicker2.datePickerMode = .time
         timePicker3.preferredDatePickerStyle = .wheels
         timePicker3.datePickerMode = .time
+        
+        dayCnt.inputView = dayPicker
+        alarmCnt.inputView = alarmPicker
+        
+        dismissPickerView()
         
         
         // 초기값 설정
@@ -112,32 +129,14 @@ class TaskViewController: UIViewController {
         if alarmCnt.text == "없음" {
             alarmTime.removeAll()
         } else if alarmCnt.text == "1" {
-            alarmTime = ["09:00"]
+            alarmTime = ["09:00 AM"]
         } else if alarmCnt.text == "2" {
-            alarmTime = ["09:00", "12:00"]
+            alarmTime = ["09:00 AM", "12:00 PM"]
         } else {//if alarmCnt.text == "3" {
-            alarmTime = ["09:00", "12:00", "18:00"]
+        alarmTime = ["09:00 AM", "12:00 PM", "06:00 PM"]
         }
         
         recordState.isOn = receivedState
-        
-        
-        timeCollectionView.dataSource = self
-        timeCollectionView.delegate = self
-        timeCollectionView.collectionViewLayout = UICollectionViewFlowLayout()
-        if let layout = timeCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.scrollDirection = .horizontal
-        }
-        
-        dayPicker.delegate = self
-        alarmPicker.delegate = self
-        dayPicker.dataSource = self
-        alarmPicker.dataSource = self
-        
-        dayCnt.inputView = dayPicker
-        alarmCnt.inputView = alarmPicker
-        
-        dismissPickerView()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
@@ -204,16 +203,34 @@ class TaskViewController: UIViewController {
         if alarmCnt.text == "없음" {
             alarmTime.removeAll()
         } else if alarmCnt.text == "1" {
-            alarmTime = ["09:00"]
+            alarmTime = ["09:00 AM"]
         } else if alarmCnt.text == "2" {
-            alarmTime = ["09:00", "12:00"]
+            alarmTime = ["09:00 AM", "12:00 PM"]
         } else {//if alarmCnt.text == "3" {
-            alarmTime = ["09:00", "12:00", "18:00"]
+            alarmTime = ["09:00 AM", "12:00 PM", "06:00 PM"]
         }
         timeCollectionView.reloadData()
         
         dayCnt.resignFirstResponder()
         alarmCnt.resignFirstResponder()
+    }
+    
+    @objc func onTimePickDone() {
+        var selectedDate = dateFormatter.string(from: timePicker.date)
+        alarmTime[0] = selectedDate
+        
+        if alarmTime.count == 2 {
+            selectedDate = dateFormatter.string(from: timePicker2.date)
+            alarmTime[1] = selectedDate
+        } else if alarmTime.count == 3 {
+            selectedDate = dateFormatter.string(from: timePicker2.date)
+            alarmTime[1] = selectedDate
+            
+            selectedDate = dateFormatter.string(from: timePicker3.date)
+            alarmTime[2] = selectedDate
+        }
+        print(alarmTime)
+        timeCollectionView.reloadData()
     }
 
     func dismissPickerView() {
@@ -296,7 +313,15 @@ extension TaskViewController: UICollectionViewDataSource {
             cell.layer.borderColor = #colorLiteral(red: 0.6666666865, green: 0.6666666865, blue: 0.6666666865, alpha: 1)
             cell.layer.cornerRadius = cell.frame.height / 2
             cell.timeTField.text = alarmTime[indexPath.row]
-//            cell.timeTField.isUserInteractionEnabled = false
+            
+            let toolBar = UIToolbar()
+            toolBar.sizeToFit()
+            let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
+            let button = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(self.onTimePickDone))
+            toolBar.setItems([space, button], animated: true)
+            toolBar.isUserInteractionEnabled = true
+            cell.timeTField.inputAccessoryView = toolBar
+            
             if indexPath.row == 0 {
                 if let time = dateFormatter.date(from: alarmTime[indexPath.row]) {
                     cell.timeTField.inputView = timePicker
@@ -313,7 +338,6 @@ extension TaskViewController: UICollectionViewDataSource {
                     timePicker3.date = time3
                 }
             }
-            
             return cell
         }
     }

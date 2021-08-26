@@ -30,11 +30,13 @@
 		23849E8126C03D94008CC09F /* AlarmCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23849E8026C03D94008CC09F /* AlarmCell.swift */; };
 		2386E27226BFDCFD008BC45D /* TaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2386E27126BFDCFD008BC45D /* TaskViewController.swift */; };
 		238A7F3626CA5D3F009A9679 /* AddCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238A7F3526CA5D3F009A9679 /* AddCell.swift */; };
+		2394AA1B26D7EF180011B99B /* SelectTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2394AA1A26D7EF180011B99B /* SelectTimeView.swift */; };
 		23A3398626C00D0400FF43E1 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A3398526C00D0400FF43E1 /* LoginViewController.swift */; };
 		23AD9B0126C50ABE00A2F299 /* DayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AD9B0026C50ABE00A2F299 /* DayCell.swift */; };
 		23AD9B0426C50D1800A2F299 /* DateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AD9B0326C50D1800A2F299 /* DateCell.swift */; };
 		23BC52B826C3EC5100EC6A96 /* IconSelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23BC52B726C3EC5100EC6A96 /* IconSelectViewController.swift */; };
 		23BC52BB26C3FA8700EC6A96 /* AddPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23BC52BA26C3FA8700EC6A96 /* AddPlan.swift */; };
+		23F09AC126D780E0002E80E1 /* SelectDateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F09AC026D780E0002E80E1 /* SelectDateViewController.swift */; };
 		8397AFB9B8E60A1293C68169 /* Pods_KkamPpackE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32EDC5A0A7D2BF422171646B /* Pods_KkamPpackE.framework */; };
 /* End PBXBuildFile section */
 
@@ -64,11 +66,13 @@
 		23849E8026C03D94008CC09F /* AlarmCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmCell.swift; sourceTree = "<group>"; };
 		2386E27126BFDCFD008BC45D /* TaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskViewController.swift; sourceTree = "<group>"; };
 		238A7F3526CA5D3F009A9679 /* AddCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCell.swift; sourceTree = "<group>"; };
+		2394AA1A26D7EF180011B99B /* SelectTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTimeView.swift; sourceTree = "<group>"; };
 		23A3398526C00D0400FF43E1 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		23AD9B0026C50ABE00A2F299 /* DayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayCell.swift; sourceTree = "<group>"; };
 		23AD9B0326C50D1800A2F299 /* DateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateCell.swift; sourceTree = "<group>"; };
 		23BC52B726C3EC5100EC6A96 /* IconSelectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconSelectViewController.swift; sourceTree = "<group>"; };
 		23BC52BA26C3FA8700EC6A96 /* AddPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlan.swift; sourceTree = "<group>"; };
+		23F09AC026D780E0002E80E1 /* SelectDateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDateViewController.swift; sourceTree = "<group>"; };
 		32EDC5A0A7D2BF422171646B /* Pods_KkamPpackE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KkamPpackE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		960439872C200355EF3337D3 /* Pods-KkamPpackE.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KkamPpackE.debug.xcconfig"; path = "Target Support Files/Pods-KkamPpackE/Pods-KkamPpackE.debug.xcconfig"; sourceTree = "<group>"; };
 		C127DB9D698C974DD4707A3F /* Pods-KkamPpackE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KkamPpackE.release.xcconfig"; path = "Target Support Files/Pods-KkamPpackE/Pods-KkamPpackE.release.xcconfig"; sourceTree = "<group>"; };
@@ -130,6 +134,8 @@
 				233C54C626BFF83500E8A045 /* CalendarViewController.swift */,
 				23317A5D26C11B0C00730452 /* WeekViewController.swift */,
 				23BC52BA26C3FA8700EC6A96 /* AddPlan.swift */,
+				23F09AC026D780E0002E80E1 /* SelectDateViewController.swift */,
+				2394AA1A26D7EF180011B99B /* SelectTimeView.swift */,
 			);
 			path = Calendar;
 			sourceTree = "<group>";
@@ -317,6 +323,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23F09AC126D780E0002E80E1 /* SelectDateViewController.swift in Sources */,
 				235E638126C0FF470019672D /* MemoCell.swift in Sources */,
 				23849E7626C02C3E008CC09F /* AlarmViewController.swift in Sources */,
 				23AD9B0126C50ABE00A2F299 /* DayCell.swift in Sources */,
@@ -326,6 +333,7 @@
 				231790CD26C8C51000162401 /* WeekDayCell.swift in Sources */,
 				235E637C26C0FF0E0019672D /* IconCell.swift in Sources */,
 				23849E7E26C02DC6008CC09F /* DailyData.swift in Sources */,
+				2394AA1B26D7EF180011B99B /* SelectTimeView.swift in Sources */,
 				238A7F3626CA5D3F009A9679 /* AddCell.swift in Sources */,
 				23849E8126C03D94008CC09F /* AlarmCell.swift in Sources */,
 				23317A5E26C11B0C00730452 /* WeekViewController.swift in Sources */,
