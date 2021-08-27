@@ -20,6 +20,7 @@ class TaskViewController: UIViewController {
     @IBOutlet weak var recordLabelAnchor: NSLayoutConstraint!
     @IBOutlet weak var recordToggleAnchor: NSLayoutConstraint!
     
+    
     var receivedImg = UIImage()
     var receivedName = ""
     var receivedChosedDay = [true, true, true, true, true, true, true]
@@ -31,6 +32,7 @@ class TaskViewController: UIViewController {
     let dayCount = ["1", "2", "3"]
     let alarmCount = ["없음","1", "2", "3"]
     var alarmTime = ["09:00"]
+    var isAlarmTF = false
     
     let dateFormatter = DateFormatter()
     
@@ -39,7 +41,6 @@ class TaskViewController: UIViewController {
     let timePicker = UIDatePicker()
     let timePicker2 = UIDatePicker()
     let timePicker3 = UIDatePicker()
-    
     
     // 전송용 변수
     var selectedDays = [false,false,false,false,false,false,false]
@@ -52,6 +53,7 @@ class TaskViewController: UIViewController {
         super .viewWillAppear(true)
         tabBarController?.tabBar.isHidden = true
     }
+    
     override func viewDidLoad() {
         super .viewDidLoad()
         
@@ -65,6 +67,7 @@ class TaskViewController: UIViewController {
         taskName.layer.borderWidth = 1
         taskName.layer.borderColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
         taskName.layer.cornerRadius = taskName.frame.height / 2
+        taskName.delegate = self
         
         daysCollectionView.dataSource = self
         daysCollectionView.delegate = self
@@ -80,6 +83,7 @@ class TaskViewController: UIViewController {
         alarmCnt.layer.cornerRadius = taskName.frame.height / 2
         alarmCnt.tintColor = .clear
         alarmCnt.text = "1"
+        alarmCnt.delegate = self
         
         
         timeCollectionView.dataSource = self
@@ -137,6 +141,26 @@ class TaskViewController: UIViewController {
         }
         
         recordState.isOn = receivedState
+
+        funcaddObservser()
+    }
+
+    
+    func funcaddObservser() {
+        NotificationCenter.default.addObserver(self, selector: #selector(KeyBoardwillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(KeyBoardwillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc func KeyBoardwillShow(_ noti : Notification ){
+        if isAlarmTF {
+            view.transform = CGAffineTransform(translationX: 0, y: -125)
+        }
+    }
+    
+    @objc func KeyBoardwillHide(_ noti : Notification ){
+        view.transform = .identity
+        isAlarmTF = false
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
@@ -240,10 +264,12 @@ class TaskViewController: UIViewController {
         let button = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(self.onPickDone))
         toolBar.setItems([space, button], animated: true)
         toolBar.isUserInteractionEnabled = true
+        
         alarmCnt.inputAccessoryView = toolBar
         dayCnt.inputAccessoryView = toolBar
     }
 }
+
 extension TaskViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -277,6 +303,7 @@ extension TaskViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         }
     }
 }
+
 extension TaskViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
@@ -351,6 +378,7 @@ extension TaskViewController: UICollectionViewDataSource {
         }
     }
 }
+
 extension TaskViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         
@@ -370,5 +398,23 @@ extension TaskViewController: UICollectionViewDelegateFlowLayout {
             let size = CGSize(width: 113, height: 47)
             return size
         }
+    }
+}
+
+extension TaskViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let text = textField.text else { return false }
+        
+        if text.count >= 6 && range.length == 0 {
+            return false
+        }
+        
+        return true
+    }
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if textField == alarmCnt {
+            isAlarmTF = true
+        }
+        return true
     }
 }

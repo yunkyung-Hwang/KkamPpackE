@@ -223,7 +223,7 @@ class HomeViewController: UIViewController {
         }
         titleDate.font = UIFont.boldSystemFont(ofSize: 25)
         listEdtiBtn.menu = nil
-        closeBtn.setImage(UIImage(systemName: "xmark"), for: .normal)
+        closeBtn.setImage(UIImage(systemName: "arrow.backward"), for: .normal)
         closeBtn.tintColor = .black
         homeCollectionView.reloadData()
         dailyCollectionView.reloadData()
@@ -272,7 +272,7 @@ class HomeViewController: UIViewController {
     }
     @IBAction func closeEdit(_ sender: Any) {
         // 도토리일 때 말고 x일 때만 동작
-        if closeBtn.currentImage == UIImage(systemName: "xmark") {
+        if closeBtn.currentImage == UIImage(systemName: "arrow.backward") {
             isSaved = false
             if isChanged {  // 변화 있으면 물어보고
                 let actionSheetController = UIAlertController(title: "", message: "홈으로 이동하시겠습니까?\n편집한 내용은 저장되지 않습니다.", preferredStyle: .alert)
