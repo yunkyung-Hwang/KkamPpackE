@@ -293,7 +293,7 @@ extension CalendarViewController: UICollectionViewDataSource {
                 }
                 
                 if weekDays[indexPath.row-7] == selectedDay {
-                    cell.backgroundColor = .lightGray
+                    cell.backgroundColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1)
                 } else {
                     cell.backgroundColor = .white
                 }
@@ -377,11 +377,11 @@ extension CalendarViewController: UICollectionViewDelegateFlowLayout {
         if isMonth {    // 월간 달력
             size = CGSize(width: 53, height: 105)
             collectionView.frame = CGRect(x: 20, y: 130, width: 374, height: 652)
-            weekView.frame = CGRect(x: 20, y: 900, width: 374, height: 459)
+            weekView.frame = CGRect(x: 0, y: 900, width: 414, height: 459)
         } else {        // 주간 달력
             size = CGSize(width: 53, height: 53)
             collectionView.frame = CGRect(x: 20, y: 130, width: 374, height: 75)
-            weekView.frame = CGRect(x: 20, y: 200, width: 374, height: 459)
+            weekView.frame = CGRect(x: 0, y: 230, width: 414, height: 459)
         }
         return size
     }

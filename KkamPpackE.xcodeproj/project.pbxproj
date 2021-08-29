@@ -37,6 +37,8 @@
 		23BC52B826C3EC5100EC6A96 /* IconSelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23BC52B726C3EC5100EC6A96 /* IconSelectViewController.swift */; };
 		23BC52BB26C3FA8700EC6A96 /* AddPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23BC52BA26C3FA8700EC6A96 /* AddPlan.swift */; };
 		23F09AC126D780E0002E80E1 /* SelectDateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F09AC026D780E0002E80E1 /* SelectDateViewController.swift */; };
+		23F9534726D8FE0F006137CB /* CalendarData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F9534626D8FE0F006137CB /* CalendarData.swift */; };
+		23F9534A26DB570F006137CB /* SizingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F9534926DB570F006137CB /* SizingCell.swift */; };
 		8397AFB9B8E60A1293C68169 /* Pods_KkamPpackE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32EDC5A0A7D2BF422171646B /* Pods_KkamPpackE.framework */; };
 /* End PBXBuildFile section */
 
@@ -73,6 +75,8 @@
 		23BC52B726C3EC5100EC6A96 /* IconSelectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconSelectViewController.swift; sourceTree = "<group>"; };
 		23BC52BA26C3FA8700EC6A96 /* AddPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlan.swift; sourceTree = "<group>"; };
 		23F09AC026D780E0002E80E1 /* SelectDateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDateViewController.swift; sourceTree = "<group>"; };
+		23F9534626D8FE0F006137CB /* CalendarData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarData.swift; sourceTree = "<group>"; };
+		23F9534926DB570F006137CB /* SizingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizingCell.swift; sourceTree = "<group>"; };
 		32EDC5A0A7D2BF422171646B /* Pods_KkamPpackE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KkamPpackE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		960439872C200355EF3337D3 /* Pods-KkamPpackE.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KkamPpackE.debug.xcconfig"; path = "Target Support Files/Pods-KkamPpackE/Pods-KkamPpackE.debug.xcconfig"; sourceTree = "<group>"; };
 		C127DB9D698C974DD4707A3F /* Pods-KkamPpackE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KkamPpackE.release.xcconfig"; path = "Target Support Files/Pods-KkamPpackE/Pods-KkamPpackE.release.xcconfig"; sourceTree = "<group>"; };
@@ -167,6 +171,7 @@
 				23AD9B0026C50ABE00A2F299 /* DayCell.swift */,
 				23AD9B0326C50D1800A2F299 /* DateCell.swift */,
 				235F5BB026C54AE000D9C3DC /* WeekDateCell.swift */,
+				23F9534926DB570F006137CB /* SizingCell.swift */,
 			);
 			path = cell;
 			sourceTree = "<group>";
@@ -197,6 +202,7 @@
 			children = (
 				23849E7926C02DBD008CC09F /* HomeData.swift */,
 				23849E7D26C02DC6008CC09F /* DailyData.swift */,
+				23F9534626D8FE0F006137CB /* CalendarData.swift */,
 			);
 			path = UserData;
 			sourceTree = "<group>";
@@ -324,6 +330,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				23F09AC126D780E0002E80E1 /* SelectDateViewController.swift in Sources */,
+				23F9534726D8FE0F006137CB /* CalendarData.swift in Sources */,
 				235E638126C0FF470019672D /* MemoCell.swift in Sources */,
 				23849E7626C02C3E008CC09F /* AlarmViewController.swift in Sources */,
 				23AD9B0126C50ABE00A2F299 /* DayCell.swift in Sources */,
@@ -337,6 +344,7 @@
 				238A7F3626CA5D3F009A9679 /* AddCell.swift in Sources */,
 				23849E8126C03D94008CC09F /* AlarmCell.swift in Sources */,
 				23317A5E26C11B0C00730452 /* WeekViewController.swift in Sources */,
+				23F9534A26DB570F006137CB /* SizingCell.swift in Sources */,
 				2314981526BED550000CCD9A /* AppDelegate.swift in Sources */,
 				23102B8F26CA96E700E08263 /* TimeCell.swift in Sources */,
 				235F5BB126C54AE000D9C3DC /* WeekDateCell.swift in Sources */,

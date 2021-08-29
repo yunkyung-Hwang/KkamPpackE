@@ -31,6 +31,7 @@ class HomeViewController: UIViewController {
     
     var gesture_home = UILongPressGestureRecognizer()
     var gesture_daily = UILongPressGestureRecognizer()
+    var gesture_undo = UILongPressGestureRecognizer()
     
     public static var homeList = [
         HomeData("가스불", UIImage(named: "icon")!, [true,true,true,true,true,true,true], 1, 1, true),
@@ -97,7 +98,32 @@ class HomeViewController: UIViewController {
         
         gesture_daily = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressGesture_daily(_:)))
         gesture_daily.minimumPressDuration = 0.01
+        
+//        gesture_undo = UILongPressGestureRecognizer(target: homeCollectionView, action: #selector(handleLongPress_undo(_:)))
+//        gesture_undo.minimumPressDuration = 1
     }
+//    @objc func handleLongPress_undo(_ gesture : UILongPressGestureRecognizer!) {
+//
+//        print("asdfasdfasdfasdfasfdasdf")
+//        let p = gesture.location(in: homeCollectionView)
+//
+//
+//        if let indexPath = homeCollectionView.indexPathForItem(at: p) {
+//            // get the cell at indexPath (the one you long pressed)
+//            let cell = homeCollectionView.cellForItem(at: indexPath)
+//
+//            cell?.backgroundColor = .white
+//
+//        } else {
+//            fatalError()
+//        }
+//
+//
+//        if gesture.state != .ended {
+//            print("asdfasdf")
+//            return
+//        }
+//    }
     
     @objc func handleLongPressGesture_home(_ gesture: UILongPressGestureRecognizer) {
         guard let homeSelectedIndexPath = homeCollectionView.indexPathForItem(at: gesture.location(in: homeCollectionView)) else { return }
@@ -468,12 +494,13 @@ extension HomeViewController: UICollectionViewDataSource {
                 if indexPath.row == cnt{ //더보기 버튼
                     print("더보기 Btn")
                 } else {    // 나머지
-                    print(cell.taskName.text!)
+//                    print(cell.taskName.text!)
                     
                     if cell.tappedCnt == 0 {
                         cell.tappedCnt += 1
-                        cell.backgroundColor = #colorLiteral(red: 0.9528681636, green: 0.9529822469, blue: 0.9528294206, alpha: 1)
-                    } else {
+                        cell.backgroundColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1)
+                    }
+                    else {
                         cell.tappedCnt -= 1
                         cell.backgroundColor = .white
                     }

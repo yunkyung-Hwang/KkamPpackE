@@ -9,8 +9,9 @@ import UIKit
 
 class MemoCell: UICollectionViewCell {
     @IBOutlet weak var memoName: UILabel!
-    @IBOutlet weak var memoContext: UILabel!
     @IBOutlet weak var memoEditBtn: UIButton!
+    @IBOutlet weak var startDate: UILabel!
+    @IBOutlet weak var endDate: UILabel!
     
     var menuItems: [UIAction] {
         return [
@@ -25,8 +26,9 @@ class MemoCell: UICollectionViewCell {
 
     func list(edit:String) {
         if edit == "edit" {
-        } else if edit == "order" {
+            
         } else if edit == "remove" {
+            
         }
     }
 }

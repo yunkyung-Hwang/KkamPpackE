@@ -13,6 +13,8 @@ class AddPlan: UIViewController {
     @IBOutlet weak var endDate: UIButton!
     
     @IBOutlet weak var memoField: UITextView!
+    
+    var isMemoField = true
     override func viewDidLoad() {
         super .viewDidLoad()
         
@@ -25,6 +27,7 @@ class AddPlan: UIViewController {
         planTitle.layer.borderWidth = 1
         planTitle.layer.borderColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
         planTitle.layer.cornerRadius = planTitle.frame.height / 2
+        planTitle.delegate = self
         
         let date = DateFormatter()
         date.dateFormat = "YYYY년 MM월 dd일 hh:mm a"
@@ -48,12 +51,32 @@ class AddPlan: UIViewController {
         memoField.layer.borderWidth = 1
         memoField.layer.borderColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1).cgColor
         memoField.layer.cornerRadius = 10
+        memoField.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(KeyBoardwillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(KeyBoardwillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     @objc func saveTask(){
         print("저장됨")
         // 구조체 추가해서 서버에 전송
         navigationController?.popViewController(animated: true)
     }
+    @objc func KeyBoardwillShow(_ noti : Notification ){
+        if isMemoField {
+            view.transform = CGAffineTransform(translationX: 0, y: -250)
+        }
+    }
+    
+    @objc func KeyBoardwillHide(_ noti : Notification ){
+        view.transform = .identity
+        isMemoField = true
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
+        self.view.endEditing(true)
+    }
+    
     @IBAction func selectStartDate(_ sender: Any) {
         guard let selectVC = self.storyboard?.instantiateViewController(identifier: "dateSelectView") as? SelectDateViewController else { return }
         
@@ -67,5 +90,13 @@ class AddPlan: UIViewController {
         selectVC.navTitle = "종료일"
         
         present(selectVC, animated: true, completion: nil)
+    }
+}
+extension AddPlan: UITextFieldDelegate {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if textField == planTitle {
+            isMemoField = false
+        }
+        return true
     }
 }

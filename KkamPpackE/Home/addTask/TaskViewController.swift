@@ -57,6 +57,9 @@ class TaskViewController: UIViewController {
     override func viewDidLoad() {
         super .viewDidLoad()
         
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.backward"), style: .plain, target: self, action: #selector(self.closeTask))
+        navigationItem.leftBarButtonItem?.tintColor = .black
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "checkmark"), style: .plain, target: self, action: #selector(self.saveTask))
         navigationItem.rightBarButtonItem?.tintColor = .black
         
@@ -130,15 +133,7 @@ class TaskViewController: UIViewController {
             alarmCnt.text = "\(receivedAlarmCnt)"
         }
         
-        if alarmCnt.text == "없음" {
-            alarmTime.removeAll()
-        } else if alarmCnt.text == "1" {
-            alarmTime = ["09:00 AM"]
-        } else if alarmCnt.text == "2" {
-            alarmTime = ["09:00 AM", "12:00 PM"]
-        } else {//if alarmCnt.text == "3" {
-        alarmTime = ["09:00 AM", "12:00 PM", "06:00 PM"]
-        }
+        onPickDone()
         
         recordState.isOn = receivedState
 
@@ -166,7 +161,18 @@ class TaskViewController: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
         self.view.endEditing(true)
     }
-    
+    @objc func closeTask() {
+        let actionSheetController = UIAlertController(title: "", message: "종료하시겠습니까?\n작성된 내용은 저장되지 않습니다.", preferredStyle: .alert)
+        let reset = UIAlertAction(title: "종료", style: .default) { (action) in
+            self.navigationController?.popViewController(animated: true)
+        }
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel) { action -> Void in }
+
+        actionSheetController.addAction(reset)
+        actionSheetController.addAction(cancelAction)
+
+        self.present(actionSheetController, animated: true, completion: nil)
+    }
     @objc func saveTask(){
         self.view.endEditing(true)
         // 요일 저장
