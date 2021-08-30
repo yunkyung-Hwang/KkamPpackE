@@ -23,7 +23,6 @@ class SelectDateViewController: UIViewController {
         nav.backgroundColor = .clear
         
         nav.topItem?.title = navTitle
-
         
         let backBtn = UIButton(type: .system)
         backBtn.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
@@ -35,7 +34,7 @@ class SelectDateViewController: UIViewController {
 
         datePicker.preferredDatePickerStyle = .inline
         datePicker.datePickerMode = .date
-        datePicker.tintColor = #colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)
+        datePicker.tintColor = #colorLiteral(red: 0.4509803922, green: 0.2980392157, blue: 0.137254902, alpha: 1)
         
         datePicker.frame = CGRect(x: 0, y: 240, width: view.frame.width, height: 400)
         view.addSubview(datePicker)

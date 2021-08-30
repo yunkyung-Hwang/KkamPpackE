@@ -57,6 +57,11 @@ class TaskViewController: UIViewController {
     override func viewDidLoad() {
         super .viewDidLoad()
         
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.view.backgroundColor = .clear
+        
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.backward"), style: .plain, target: self, action: #selector(self.closeTask))
         navigationItem.leftBarButtonItem?.tintColor = .black
         
@@ -64,12 +69,15 @@ class TaskViewController: UIViewController {
         navigationItem.rightBarButtonItem?.tintColor = .black
         
         taskImg.layer.cornerRadius = taskImg.frame.height / 2
+        taskImg.layer.borderWidth = 1
+        taskImg.layer.borderColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1)
         
         taskName.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: taskName.frame.height))
         taskName.leftViewMode = .always
         taskName.layer.borderWidth = 1
-        taskName.layer.borderColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+        taskName.layer.borderColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1)
         taskName.layer.cornerRadius = taskName.frame.height / 2
+        taskName.backgroundColor = .white
         taskName.delegate = self
         
         daysCollectionView.dataSource = self
@@ -77,14 +85,16 @@ class TaskViewController: UIViewController {
         daysCollectionView.allowsMultipleSelection = true
         
         dayCnt.layer.borderWidth = 1
-        dayCnt.layer.borderColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+        dayCnt.layer.borderColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1)
         dayCnt.layer.cornerRadius = taskName.frame.height / 2
         dayCnt.tintColor = .clear
+        dayCnt.backgroundColor = .white
         
         alarmCnt.layer.borderWidth = 1
-        alarmCnt.layer.borderColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+        alarmCnt.layer.borderColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1)
         alarmCnt.layer.cornerRadius = taskName.frame.height / 2
         alarmCnt.tintColor = .clear
+        alarmCnt.backgroundColor = .white
         alarmCnt.text = "1"
         alarmCnt.delegate = self
         
@@ -116,7 +126,12 @@ class TaskViewController: UIViewController {
         
         
         // 초기값 설정
-        taskImg.setImage(receivedImg, for: .normal)
+        if receivedImg == UIImage() {
+            taskImg.setImage(iconImgList.randomElement()!, for: .normal)
+//            taskImg.setImage(UIImage(named: "icon"), for: .normal)
+        } else {
+            taskImg.setImage(receivedImg, for: .normal)
+        }
         taskName.text = self.receivedName
 
         for i in 0...6 {
@@ -214,7 +229,7 @@ class TaskViewController: UIViewController {
             // 값을 제대로 입력하지 않았을 때
             if taskName.text == "" || selectedDays.count == 0 || dayCnt.text == "" || alarmCnt.text == "" {
                 
-                let alert = UIAlertController(title: "모든 항목을 입력해주세요", message: "", preferredStyle: UIAlertController.Style.alert)
+                let alert = UIAlertController(title: "제목을 입력해주세요", message: "", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
                 
                 self.present(alert, animated: true, completion: nil)
@@ -343,8 +358,9 @@ extension TaskViewController: UICollectionViewDataSource {
         } else {
             let cell = timeCollectionView.dequeueReusableCell(withReuseIdentifier: "timeCell", for: indexPath) as! TimeCell
             cell.layer.borderWidth = 1
-            cell.layer.borderColor = #colorLiteral(red: 0.6666666865, green: 0.6666666865, blue: 0.6666666865, alpha: 1)
+            cell.layer.borderColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1)
             cell.layer.cornerRadius = cell.frame.height / 2
+            cell.backgroundColor = .white
             cell.timeTField.text = alarmTime[indexPath.row]
             
             let toolBar = UIToolbar()

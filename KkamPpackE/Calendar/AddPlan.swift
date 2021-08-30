@@ -18,6 +18,14 @@ class AddPlan: UIViewController {
     override func viewDidLoad() {
         super .viewDidLoad()
         
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.view.backgroundColor = .clear
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.backward"), style: .plain, target: self, action: #selector(self.closeModal))
+        navigationItem.leftBarButtonItem?.tintColor = .black
+
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "checkmark"), style: .plain, target: self, action: #selector(self.saveTask))
         navigationItem.rightBarButtonItem?.tintColor = .black
         
@@ -25,15 +33,16 @@ class AddPlan: UIViewController {
         planTitle.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: planTitle.frame.height))
         planTitle.leftViewMode = .always
         planTitle.layer.borderWidth = 1
-        planTitle.layer.borderColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+        planTitle.layer.borderColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1)
         planTitle.layer.cornerRadius = planTitle.frame.height / 2
+        planTitle.backgroundColor = .white
         planTitle.delegate = self
         
         let date = DateFormatter()
         date.dateFormat = "YYYY년 MM월 dd일 hh:mm a"
         
         startDate.layer.borderWidth = 1
-        startDate.layer.borderColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1).cgColor
+        startDate.layer.borderColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1).cgColor
         startDate.layer.cornerRadius = startDate.frame.height / 2
         startDate.backgroundColor = .white
         startDate.setTitle(date.string(from: Date()), for: .normal)
@@ -41,7 +50,7 @@ class AddPlan: UIViewController {
         startDate.setTitleColor(.black, for: .normal)
         
         endDate.layer.borderWidth = 1
-        endDate.layer.borderColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1).cgColor
+        endDate.layer.borderColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1).cgColor
         endDate.layer.cornerRadius = startDate.frame.height / 2
         endDate.backgroundColor = .white
         endDate.setTitle(date.string(from: Date()), for: .normal)
@@ -49,13 +58,16 @@ class AddPlan: UIViewController {
         endDate.setTitleColor(.black, for: .normal)
         
         memoField.layer.borderWidth = 1
-        memoField.layer.borderColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1).cgColor
+        memoField.layer.borderColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1).cgColor
         memoField.layer.cornerRadius = 10
         memoField.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         
         NotificationCenter.default.addObserver(self, selector: #selector(KeyBoardwillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(KeyBoardwillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    @objc func closeModal() {
+        navigationController?.popViewController(animated: true)
     }
     @objc func saveTask(){
         print("저장됨")

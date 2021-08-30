@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		23102B8F26CA96E700E08263 /* TimeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23102B8E26CA96E700E08263 /* TimeCell.swift */; };
+		2311623126DCB1ED00DB5BEB /* IconSelectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2311623026DCB1ED00DB5BEB /* IconSelectCell.swift */; };
+		2311623426DCB65200DB5BEB /* iconList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2311623326DCB65200DB5BEB /* iconList.swift */; };
 		2314981526BED550000CCD9A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2314981426BED550000CCD9A /* AppDelegate.swift */; };
 		2314981726BED550000CCD9A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2314981626BED550000CCD9A /* SceneDelegate.swift */; };
 		2314981926BED550000CCD9A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2314981826BED550000CCD9A /* ViewController.swift */; };
@@ -44,6 +46,8 @@
 
 /* Begin PBXFileReference section */
 		23102B8E26CA96E700E08263 /* TimeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCell.swift; sourceTree = "<group>"; };
+		2311623026DCB1ED00DB5BEB /* IconSelectCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconSelectCell.swift; sourceTree = "<group>"; };
+		2311623326DCB65200DB5BEB /* iconList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iconList.swift; sourceTree = "<group>"; };
 		2314981126BED550000CCD9A /* KkamPpackE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KkamPpackE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2314981426BED550000CCD9A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2314981626BED550000CCD9A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -193,6 +197,8 @@
 				23BC52B726C3EC5100EC6A96 /* IconSelectViewController.swift */,
 				231790CC26C8C51000162401 /* WeekDayCell.swift */,
 				23102B8E26CA96E700E08263 /* TimeCell.swift */,
+				2311623026DCB1ED00DB5BEB /* IconSelectCell.swift */,
+				2311623326DCB65200DB5BEB /* iconList.swift */,
 			);
 			path = addTask;
 			sourceTree = "<group>";
@@ -343,11 +349,13 @@
 				2394AA1B26D7EF180011B99B /* SelectTimeView.swift in Sources */,
 				238A7F3626CA5D3F009A9679 /* AddCell.swift in Sources */,
 				23849E8126C03D94008CC09F /* AlarmCell.swift in Sources */,
+				2311623126DCB1ED00DB5BEB /* IconSelectCell.swift in Sources */,
 				23317A5E26C11B0C00730452 /* WeekViewController.swift in Sources */,
 				23F9534A26DB570F006137CB /* SizingCell.swift in Sources */,
 				2314981526BED550000CCD9A /* AppDelegate.swift in Sources */,
 				23102B8F26CA96E700E08263 /* TimeCell.swift in Sources */,
 				235F5BB126C54AE000D9C3DC /* WeekDateCell.swift in Sources */,
+				2311623426DCB65200DB5BEB /* iconList.swift in Sources */,
 				2314981726BED550000CCD9A /* SceneDelegate.swift in Sources */,
 				234AF01A26BF7E0600CB1BDC /* HomeViewController.swift in Sources */,
 				233C54CA26C0009000E8A045 /* StartViewController.swift in Sources */,

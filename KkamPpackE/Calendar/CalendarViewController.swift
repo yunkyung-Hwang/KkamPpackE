@@ -62,7 +62,7 @@ class CalendarViewController: UIViewController {
         collectionView.delegate = self
         
         collectionView.layer.borderWidth = 1
-        collectionView.layer.borderColor = UIColor.lightGray.cgColor
+        collectionView.layer.borderColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1).cgColor
         collectionView.layer.cornerRadius = 15
 
         dateFormatter.dateFormat = "yyyy년 M월" // 월 표시 포맷 설정
@@ -195,6 +195,8 @@ class CalendarViewController: UIViewController {
                 return
             }
             self.navigationController?.pushViewController(uvc, animated: true)
+//            uvc.modalPresentationStyle = .fullScreen
+//            present(uvc, animated: true, completion: nil)
         } else {        // 주간 화면일때 눌리면
             addAndMonthBtn.setImage(UIImage(systemName: "plus"), for: .normal)
             isMonth.toggle()
@@ -241,14 +243,14 @@ extension CalendarViewController: UICollectionViewDataSource {
         if indexPath.row < 7 {  // 주 이름
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "dayCell", for: indexPath) as! DayCell
             cell.dayLabel.text = daylist[indexPath.row]
-            cell.layer.borderWidth = 1
-            cell.layer.borderColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1).cgColor
+            cell.layer.borderWidth = 0.5
+            cell.layer.borderColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1).cgColor
             return cell
         } else {
             if isMonth {    // 월간
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "dateCell", for: indexPath) as! DateCell
-                cell.layer.borderWidth = 1
-                cell.layer.borderColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1).cgColor
+                cell.layer.borderWidth = 0.5
+                cell.layer.borderColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1).cgColor
                 
                 // 1 to 01
                 if days[indexPath.row - 7][1] / 10 == 0 {
@@ -261,7 +263,6 @@ extension CalendarViewController: UICollectionViewDataSource {
                 if days[indexPath.row - 7][0] < components.month!
                 || days[indexPath.row - 7][0] > components.month!{
                     cell.dateLabel.textColor = #colorLiteral(red: 0.768627451, green: 0.768627451, blue: 0.768627451, alpha: 1)
-                    
                     cell.taskCnt.backgroundColor = .white
                     cell.taskCnt.textColor = .white
                 } else {    // 이번달 이면
@@ -269,10 +270,12 @@ extension CalendarViewController: UICollectionViewDataSource {
                     // 오늘 날짜인 경우 색칠
                     if days[indexPath.row - 7][0] == cal.component(.month, from: now) && days[indexPath.row - 7][1] == cal.component(.day, from: now) {
                         cell.dateLabel.clipsToBounds = true
-                        cell.dateLabel.backgroundColor = .lightGray
+                        cell.dateLabel.backgroundColor = #colorLiteral(red: 0.4509803922, green: 0.2980392157, blue: 0.137254902, alpha: 1)
+                        cell.dateLabel.textColor = .white
                         cell.dateLabel.layer.cornerRadius = cell.dateLabel.frame.height/2
                     } else {
                         cell.dateLabel.backgroundColor = .white
+                        cell.dateLabel.textColor = .black
                     }
                     // 태스크 개수 표시
 //                    cell.taskCnt.clipsToBounds = true
@@ -283,8 +286,8 @@ extension CalendarViewController: UICollectionViewDataSource {
                 return cell
             } else {    // 주간
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "weekdateCell", for: indexPath) as! WeekDateCell
-                cell.layer.borderWidth = 1
-                cell.layer.borderColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1).cgColor
+                cell.layer.borderWidth = 0.5
+                cell.layer.borderColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1).cgColor
 
                 if weekDays[indexPath.row - 7][1] < 10 {
                     cell.weekDateLabel.text = "0\(weekDays[indexPath.row - 7][1])"

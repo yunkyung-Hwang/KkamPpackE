@@ -10,7 +10,7 @@ import UIKit
 class HomeViewController: UIViewController {
     @IBOutlet weak var closeBtn: UIButton!
     @IBOutlet weak var titleDate: UILabel!
-    @IBOutlet weak var listEdtiBtn: UIButton!
+    @IBOutlet weak var listEditBtn: UIButton!
     @IBOutlet weak var homeCollectionView: UICollectionView!
     @IBOutlet weak var dailyCollectionView: UICollectionView!
     @IBOutlet weak var dailyTitle: UILabel!
@@ -34,19 +34,19 @@ class HomeViewController: UIViewController {
     var gesture_undo = UILongPressGestureRecognizer()
     
     public static var homeList = [
-        HomeData("가스불", UIImage(named: "icon")!, [true,true,true,true,true,true,true], 1, 1, true),
-        HomeData("전등", UIImage(named: "icon")!, [true,false,true,false,true,false,true], 2, 2, true),
-        HomeData("마스크", UIImage(named: "icon")!, [true,true,true,true,true,true,true], 3, 3, true),
-        HomeData("지갑", UIImage(named: "icon")!, [true,true,true,true,true,true,true], 2, 2, true),
-        HomeData("창문", UIImage(named: "icon")!, [true,true,true,true,true,true,true], 1, 0, true)
+        HomeData("가스불", UIImage(named: "가스불")!, [true,true,true,true,true,true,true], 1, 1, true),
+        HomeData("마스크", UIImage(named: "마스크")!, [true,true,true,true,true,true,true], 3, 3, true),
+        HomeData("지갑", UIImage(named: "지갑")!, [true,true,true,true,true,true,true], 2, 2, true),
+        HomeData("창문", UIImage(named: "창문")!, [true,true,true,true,true,true,true], 1, 0, true),
+        HomeData("전등", UIImage(named: "전등")!, [true,false,true,false,true,false,true], 2, 2, true)
     ]
     
     public static var dailyList = [
-        DailyData("운동", UIImage(named: "icon")!, [true,true,true,true,true,true,true], 1, 1, true),
-        DailyData("약먹기", UIImage(named: "icon")!, [true,true,true,true,true,true,true], 2, 2, true),
-        DailyData("분리수거", UIImage(named: "icon")!, [true,true,true,true,true,true,true], 3, 3, true),
-        DailyData("장보기", UIImage(named: "icon")!, [true,true,true,true,true,true,true], 2, 2, true),
-        DailyData("세차", UIImage(named: "icon")!, [true,true,true,true,true,true,true], 1, 0, true)
+        DailyData("약먹기", UIImage(named: "약")!, [true,true,true,true,true,true,true], 2, 2, true),
+        DailyData("운동", UIImage(named: "운동")!, [true,true,true,true,true,true,true], 1, 1, true),
+        DailyData("영어공부", UIImage(named: "공부")!, [true,true,true,true,true,true,true], 1, 0, true),
+        DailyData("분리수거", UIImage(named: "분리수거")!, [true,true,true,true,true,true,true], 3, 3, true),
+        DailyData("장보기", UIImage(named: "장보기")!, [true,true,true,true,true,true,true], 2, 2, true)
     ]
     
     var dailyListTmp = dailyList
@@ -63,6 +63,7 @@ class HomeViewController: UIViewController {
         self.navigationController?.isNavigationBarHidden = true
         tabBarController?.tabBar.isHidden = false
         tabBarController?.tabBar.tintColor = .brown
+//        tabBarController?.tabBar.backgroundColor = #colorLiteral(red: 0.7450980392, green: 0.6078431373, blue: 0.4666666667, alpha: 1)
         
         setCollectionView()
     }
@@ -72,7 +73,7 @@ class HomeViewController: UIViewController {
 //        print(view.frame.width, view.frame.height)
         
         let date = DateFormatter()
-        date.dateFormat = "MM.dd.EEEE"
+        date.dateFormat = "M월 d일 EEEE"
         date.locale = Locale(identifier: "ko-KR")
         titleDate.text = date.string(from: Date())
         
@@ -84,12 +85,12 @@ class HomeViewController: UIViewController {
         dailyCollectionView.delegate = self
         
         homeCollectionView.layer.borderWidth = 1
-        homeCollectionView.layer.borderColor = UIColor.lightGray.cgColor
+        homeCollectionView.layer.borderColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1).cgColor
         homeCollectionView.layer.cornerRadius = 15
 
         
         dailyCollectionView.layer.borderWidth = 1
-        dailyCollectionView.layer.borderColor = UIColor.lightGray.cgColor
+        dailyCollectionView.layer.borderColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1).cgColor
         dailyCollectionView.layer.cornerRadius = 15
         
         
@@ -98,32 +99,8 @@ class HomeViewController: UIViewController {
         
         gesture_daily = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressGesture_daily(_:)))
         gesture_daily.minimumPressDuration = 0.01
-        
-//        gesture_undo = UILongPressGestureRecognizer(target: homeCollectionView, action: #selector(handleLongPress_undo(_:)))
-//        gesture_undo.minimumPressDuration = 1
     }
-//    @objc func handleLongPress_undo(_ gesture : UILongPressGestureRecognizer!) {
-//
-//        print("asdfasdfasdfasdfasfdasdf")
-//        let p = gesture.location(in: homeCollectionView)
-//
-//
-//        if let indexPath = homeCollectionView.indexPathForItem(at: p) {
-//            // get the cell at indexPath (the one you long pressed)
-//            let cell = homeCollectionView.cellForItem(at: indexPath)
-//
-//            cell?.backgroundColor = .white
-//
-//        } else {
-//            fatalError()
-//        }
-//
-//
-//        if gesture.state != .ended {
-//            print("asdfasdf")
-//            return
-//        }
-//    }
+
     
     @objc func handleLongPressGesture_home(_ gesture: UILongPressGestureRecognizer) {
         guard let homeSelectedIndexPath = homeCollectionView.indexPathForItem(at: gesture.location(in: homeCollectionView)) else { return }
@@ -141,7 +118,6 @@ class HomeViewController: UIViewController {
                 homeCollectionView.cancelInteractiveMovement()
             }
             homeCollectionView.updateInteractiveMovementTargetPosition(location)
-//            homeCollectionView.updateInteractiveMovementTargetPosition(gesture.location(in: homeCollectionView))  // 자유 움직임
         case .ended:
             homeCollectionView.endInteractiveMovement()
         default:
@@ -200,7 +176,7 @@ class HomeViewController: UIViewController {
 
         // 일회성 title위치 홈바둑판 y좌표 + 홈바둑판 행 개수 * 120 + 두개 간격
         let dailyY = Int(homeCollectionView.frame.minY) + homeHeight + 40
-        dailyTitle.frame = CGRect(x: 27, y: dailyY, width: 63, height: 29)
+        dailyTitle.frame = CGRect(x: 27, y: dailyY, width: 128, height: 29)
         
         dailyCollectionView.frame = CGRect(x: 27, y: dailyY + 14 + 29, width: 360, height: dailyHeight)
         
@@ -223,8 +199,8 @@ class HomeViewController: UIViewController {
         var menu: UIMenu {
             return UIMenu(title: "", image: UIImage(systemName: "ellipsis"), identifier: nil, options: [], children: menuItems)
         }
-        listEdtiBtn.menu = menu
-        listEdtiBtn.showsMenuAsPrimaryAction = true
+        listEditBtn.menu = menu
+        listEditBtn.showsMenuAsPrimaryAction = true
     }
     
     func list(edit:String) {
@@ -232,23 +208,27 @@ class HomeViewController: UIViewController {
             HomeViewController.isEdit = true
             
             titleDate.text = "할 일 편집"
-            listEdtiBtn.setImage(nil, for: .normal)
-            listEdtiBtn.isEnabled = false
+            titleDate.font = UIFont.boldSystemFont(ofSize: 25)
+            listEditBtn.setImage(nil, for: .normal)
+            listEditBtn.isEnabled = false
         } else if edit == "order" {
             isReorder = true
             titleDate.text = "순서 변경"
-            listEdtiBtn.setImage(UIImage(systemName: "checkmark"), for: .normal)
+            titleDate.font = UIFont.boldSystemFont(ofSize: 25)
+            listEditBtn.setImage(UIImage(systemName: "checkmark"), for: .normal)
             
             homeCollectionView.addGestureRecognizer(gesture_home)
             dailyCollectionView.addGestureRecognizer(gesture_daily)
         } else if edit == "remove" {
             isRemove = true
             titleDate.text = "삭제"
-            listEdtiBtn.setImage(nil, for: .normal)
-            listEdtiBtn.isEnabled = false
+            titleDate.font = UIFont.boldSystemFont(ofSize: 25)
+            listEditBtn.setImage(nil, for: .normal)
+            listEditBtn.isEnabled = false
         }
         titleDate.font = UIFont.boldSystemFont(ofSize: 25)
-        listEdtiBtn.menu = nil
+        listEditBtn.menu = nil
+//        closeBtn.setImage(UIImage(named: "arrow_back"), for: .normal)
         closeBtn.setImage(UIImage(systemName: "arrow.backward"), for: .normal)
         closeBtn.tintColor = .black
         homeCollectionView.reloadData()
@@ -259,10 +239,10 @@ class HomeViewController: UIViewController {
     func closeView() {
         // 타이틀 라벨 설정
         let date = DateFormatter()
-        date.dateFormat = "MM.dd.EEEE"
+        date.dateFormat = "M월 d일 EEEE"
         date.locale = Locale(identifier: "ko-KR")
         titleDate.text = date.string(from: Date())
-        titleDate.font = UIFont.boldSystemFont(ofSize: 29)
+        titleDate.font = UIFont.boldSystemFont(ofSize: 25)
         
         // 순서변경 제스처 삭제
         homeCollectionView.removeGestureRecognizer(gesture_home)
@@ -274,7 +254,7 @@ class HomeViewController: UIViewController {
         isRemove = false
         
         // 버튼 기능 및 이미지 변경
-        listEdtiBtn.setImage(UIImage(systemName: "ellipsis"), for: .normal)
+        listEditBtn.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         closeBtn.setImage(UIImage(named: "icon"), for: .normal)
         setMenu()
         
@@ -287,7 +267,7 @@ class HomeViewController: UIViewController {
         //setCollectionView()
         
         // 버튼 활성화
-        listEdtiBtn.isEnabled = true
+        listEditBtn.isEnabled = true
     }
     @IBAction func saveList(_ sender: Any) {
         isSaved = true
@@ -353,26 +333,26 @@ extension HomeViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = homeCollectionView.dequeueReusableCell(withReuseIdentifier: "homeCell", for: indexPath) as! HomeCell
-        cell.layer.borderWidth = 1
-        cell.layer.borderColor = #colorLiteral(red: 0.8517223001, green: 0.846660018, blue: 0.8556143045, alpha: 1).cgColor
+        cell.layer.borderWidth = 0.5
+        cell.layer.borderColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1).cgColor
         cell.backgroundColor = .white
         
         let addCell = homeCollectionView.dequeueReusableCell(withReuseIdentifier: "addCell", for: indexPath) as! AddCell
-        addCell.layer.borderWidth = 1
-        addCell.layer.borderColor = #colorLiteral(red: 0.8517223001, green: 0.846660018, blue: 0.8556143045, alpha: 1).cgColor
-        
+        addCell.layer.borderWidth = 0.5
+        addCell.layer.borderColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1).cgColor
         if HomeViewController.isEdit || isReorder || isRemove {
             addCell.plusImg.tintColor = .lightGray
         }
         
         let noneCell = homeCollectionView.dequeueReusableCell(withReuseIdentifier: "noneCell", for: indexPath)
-        noneCell.layer.borderWidth = 1
-        noneCell.layer.borderColor = #colorLiteral(red: 0.8517223001, green: 0.846660018, blue: 0.8556143045, alpha: 1).cgColor
+        noneCell.layer.borderWidth = 0.5
+        noneCell.layer.borderColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1).cgColor
         
         
         if collectionView == homeCollectionView {
             if indexPath.row < HomeViewController.homeList.count {
                 cell.taskName.text = HomeViewController.homeList[indexPath.row].name
+                cell.taskImg.image = HomeViewController.homeList[indexPath.row].icon
                 if HomeViewController.isEdit {
                     cell.taskEdit.image = UIImage(named: "edit")
                 } else if isReorder{
@@ -391,6 +371,7 @@ extension HomeViewController: UICollectionViewDataSource {
         } else { //if collectionView == dailyCollectionView
             if indexPath.row < HomeViewController.dailyList.count {
                 cell.taskName.text = HomeViewController.dailyList[indexPath.row].name
+                cell.taskImg.image = HomeViewController.dailyList[indexPath.row].icon
                 if HomeViewController.isEdit {
                     cell.taskEdit.image = UIImage(named: "edit")
                 } else if isReorder{

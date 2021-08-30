@@ -9,10 +9,10 @@ import UIKit
 
 class WeekViewController: UIViewController {
     @IBOutlet weak var iconCollectionView: UICollectionView!
-    @IBOutlet weak var memoViewController: UICollectionView!
+    @IBOutlet weak var memoCollectionView: UICollectionView!
     
     var memoList = [["친구랑 점심 약속", "장소: 우리집 \n미리 음식 주문해두기!!\nasdf\nasdf"],
-                    ["메모 제목2", ""]]
+                    ["메모 제목2", "asdfasdfasdfasdfasdfasdfasdfasdfasdfadsfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasf"],["메모 제목3", "일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십"]]
     
     override func viewDidLoad() {
         super .viewDidLoad()
@@ -24,8 +24,8 @@ class WeekViewController: UIViewController {
             layout.scrollDirection = .horizontal
         }
         
-        memoViewController.dataSource = self
-        memoViewController.delegate = self
+        memoCollectionView.dataSource = self
+        memoCollectionView.delegate = self
     }
 }
 extension WeekViewController: UICollectionViewDataSource {
@@ -43,7 +43,7 @@ extension WeekViewController: UICollectionViewDataSource {
         if collectionView == iconCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "iconCell", for: indexPath) as! IconCell
             cell.layer.borderWidth = 1
-            cell.layer.borderColor = UIColor.lightGray.cgColor
+            cell.layer.borderColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1).cgColor
             cell.layer.cornerRadius = cell.frame.width / 2
             
             cell.backgroundColor = .white
@@ -53,7 +53,7 @@ extension WeekViewController: UICollectionViewDataSource {
             if indexPath.row < memoList.count {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "memoCell", for: indexPath) as! MemoCell
                 cell.layer.borderWidth = 1
-                cell.layer.borderColor = UIColor.lightGray.cgColor
+                cell.layer.borderColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1).cgColor
                 cell.layer.cornerRadius = 15
                 
                 cell.backgroundColor = #colorLiteral(red: 0.862745098, green: 0.8235294118, blue: 0.7843137255, alpha: 1)
@@ -120,5 +120,13 @@ extension WeekViewController: UICollectionViewDelegateFlowLayout {
             }
         }
     }
-    
 }
+extension UITextView {
+    func numberOfLine() -> Int {
+        
+        let size = CGSize(width: frame.width, height: .infinity)
+        let estimatedSize = sizeThatFits(size)
+        
+        return Int(estimatedSize.height / (self.font!.lineHeight))
+    }
+} 
